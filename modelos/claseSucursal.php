@@ -11,7 +11,7 @@
         // funcion para desabilitar la sucursal
         public function desabilitaS($idsucursal){
             $conexion = Conexion::getConexion();
-            $stmt = $conexion->prepare("update sucursal set estado = '0' where idsucursal = '$id_sucursal'");
+            $stmt = $conexion->prepare("update sucursal set estado = '0' where idsucursal = $idsucursal");
             $stmt->execute();
             if ($stmt->rowCount()>0){
                 echo TRUE;

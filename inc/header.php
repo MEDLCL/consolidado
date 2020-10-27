@@ -219,7 +219,7 @@
                 </li>
               </ul>
             </li>
-            <li><a href="vistas/vistasucursal.php"><i class="fa fa-institution"></i>Sucursal</a></li>
+            <li><a href="vistasucursal.php"><i class="fa fa-institution"></i>Sucursal</a></li>
           </ul>
         </li>
 
