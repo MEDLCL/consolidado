@@ -38,6 +38,22 @@ function mostrarsucursal(idsucursal) {
         })
 }
 
+function editarinserta() {
+    var form = new FormData($("#formsucursal")[0]);
+    $.ajax({
+        url: "../ajax/sucursalajax.php?op=agregar",
+        type: "POST",
+        data: form,
+        contentType: false,
+        processData: false,
+        success: function(datos) {
+            $('#tablaempleado').DataTable().ajax.reload();
+            alertify.success(datos);
+        }
+    });
+    limpiar();
+}
+
 function limpiar() {
     $("#formsucursal")[0].reset();
 }

@@ -3,7 +3,15 @@ require_once "../config/ClaseConexion.php.php";
 require_once "../config/funciones.php";
 
 $sucursal = new Sucursal();
-$idsucursal= isset($__POST["idsucursal"])?$idsucursal=$__POST["idsucursal"]:$idsucursal =0;
+$idsucursal= isset($_POST["idsucursal"])?$idsucursal=$_POST["idsucursal"]:$idsucursal =0;
+$razons=isset($_POST['razons'])?$_POST['']:$razons = 'razons';
+$nombrec=isset($_POST['nombrec'])?$_POST['']:$nombrec = 'nombrec';
+$telefono=isset($_POST['Telefono'])?$_POST['Telefono']:$telefono = '';
+$pais = isset($_POST['pais'])?$_POST['pais']:$pais = 0;
+$identificacion=isset($_POST[''])?$_POST['']:$identificacion = '';
+$direccion=isset($_POST['direccion'])?$_POST['direccion']:$direccion = '';
+$logo=isset($_POST['logo'])?$_POST['logo']:$logo = '';
+
  
 
 switch ($_GET["op"]){
@@ -19,8 +27,9 @@ switch ($_GET["op"]){
                 }
             }
             $con = Conexion::getConexion();
-            $stmt = $con->prepare();
-            $stmt->bindParam();
+            $stmt = $con->prepare("INSERT INTO (razon_social,nombre_comercial,Telefono,identificacion,direccion,logo_nombre,fechaingreso) 
+                                VALUES (:razon,:nombrec,:tel,:identi,:dir,:logo,:fecha)");
+            $stmt->bindParam(":razons",$razons);
             $stmt->execute();
 
             $con = Conexion::cerrar();
@@ -41,14 +50,16 @@ switch ($_GET["op"]){
                         }
                     }
                 }
-            }
+           
             $con = Conexion::getConexion();
             $stmt = $con->prepare("UPDATE 
                             SET 
                             WHERE  ");
-            $stmt->bindParam();
+            $stmt->bindParam("",$razons);
             $stmt->execute();  
-            $con = Conexion::cerrar();      
+            $con = Conexion::cerrar();
+        }
+    }      
      break;
     //
     // case 'desactivar':
@@ -64,7 +75,10 @@ switch ($_GET["op"]){
     // break;
     //
     case 'mostrar':
-        $rspt = $sucursal->mostrarPorId(1);
+        $con = Conexion::getConexion();
+        $rspt = $con->prepare("SELECT * FROM WHERE ");
+        $rspt->execute();
+        $rspt->fetch(PDO::FETCH_OBJ); 
         echo json_encode($rspt);
           break;
 

@@ -102,11 +102,18 @@ $pais = new Pais();
                             </select>
                         </div>
                     </div>
-
                     <div class="form-group">
-                        <label for="logosucursal" class="control-label col-md-2">Logo</label>
+                        <label for="Telefono" class="control-label col-md-2">Telefono</label>
+                        <div class="col-md-9">
+                            <input type="tel" class="form-control" id="identificacion" name="identificacion" placeholder="Telefono">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="logo" class="control-label col-md-2">Logo</label>
                         <div class="col-md-3">
-                            <input type="file" id="logosucursal" class="form-control">
+                            <input type="file" id="logo" name="logo" class="form-control">
+                            <input type="hidden" id="logo_actual" name="logo_actual">
+                            <img src="" alt="" id="logo_muestra" name="logo_muestra" width="150px" height="120px">
                         </div>
                     </div>
                     <div class="form-group">
