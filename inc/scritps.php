@@ -21,5 +21,6 @@
 <script src="../plantilla/datatables/js/vfs_fonts.js"></script>
 <script src="../plantilla/js/bootbox.min.js"></script>
 <script src="../plantilla/plugins/bootstrap-selected/js/bootstrap-select.min.js"></script>
+<script src="../plantilla/plugins/alertify/alertify.js"></script>
 </body>
 </html>

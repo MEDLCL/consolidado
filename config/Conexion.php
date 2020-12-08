@@ -1,6 +1,5 @@
 <?php
-require_once "ConfigDB.php";
-
+include_once "ConfigDB.php";
 class Conexion
 {
     private static $con = null;

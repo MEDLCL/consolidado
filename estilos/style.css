@@ -1,28 +1,39 @@
 /* imagen de fondo login*/
+
 html {
     box-sizing: border-box;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
     box-sizing: inherit;
 }
+
 @font-face {
-font-family: SourceSansPro-Italic;
-src: url(fonts/SourceSansPro-Italic.ttf);
-}
-html {
-  font-family: SourceSansPro-Italic, Verdana, Arial, Helvetica, sans-serif;
-}
-.logo2{
-  width: 225px;
-  border-radius: 50%;
-  margin-top: -50px;
-}
-.logotipo {
-  width: 50px;
-  height: 50px;
+    font-family: SourceSansPro-Italic;
+    src: url(fonts/SourceSansPro-Italic.ttf);
 }
 
+html {
+    font-family: SourceSansPro-Italic, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.logo2 {
+    width: 225px;
+    border-radius: 50%;
+    margin-top: -50px;
+}
+
+.logotipo {
+    width: 50px;
+    height: 50px;
+}
+
+.logotabla {
+    width: 150;
+    height: 120;
+}
 
 
 /*
