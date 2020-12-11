@@ -1,6 +1,8 @@
 <?php
 include_once "../config/Conexion.php";
-$op = isset($_POST['op'])?$op = $_POST['op']: $op ='';
+$op = isset($_GET['op'])?$op = $_GET['op']: $op ='';
+
+
 
 switch ($op) {
     case 'permisos':
@@ -42,7 +44,11 @@ switch ($op) {
             return "No se pudo carga la tabla". $th->getMessage();
         }
         break;
+    case 'guardaryeditar':
+     print_r($_POST);
     
+    break;
+
     default:
         # code...
         break;
