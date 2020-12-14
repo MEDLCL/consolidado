@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.3
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 08-12-2020 a las 00:44:16
+-- Servidor: localhost:3307
+-- Tiempo de generación: 14-12-2020 a las 03:42:37
 -- Versión del servidor: 10.4.14-MariaDB
--- Versión de PHP: 7.2.34
+-- Versión de PHP: 7.2.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,37 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `almadisa`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asigna_permiso`
+--
+
+CREATE TABLE `asigna_permiso` (
+  `idasigna_menu` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_menu` int(11) NOT NULL,
+  `id_permiso` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `asigna_permiso`
+--
+
+INSERT INTO `asigna_permiso` (`idasigna_menu`, `id_usuario`, `id_menu`, `id_permiso`) VALUES
+(1, 14, 1, 1),
+(2, 14, 1, 1),
+(3, 14, 1, 1),
+(4, 14, 1, 1),
+(5, 14, 1, 1),
+(6, 14, 1, 1),
+(7, 14, 1, 1),
+(8, 14, 1, 1),
+(9, 14, 1, 1),
+(10, 15, 1, 1),
+(11, 15, 6, 1),
+(12, 15, 7, 1);
 
 -- --------------------------------------------------------
 
@@ -118,13 +149,34 @@ CREATE TABLE `login` (
   `id_sucursal` int(11) NOT NULL,
   `id_depto` int(11) NOT NULL,
   `id_puesto` int(11) NOT NULL,
-  `login` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `acceso` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `pass` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
   `avatar` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
   `nombre` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
   `apellido` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
   `correo` varchar(150) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `login`
+--
+
+INSERT INTO `login` (`id_usuario`, `id_sucursal`, `id_depto`, `id_puesto`, `acceso`, `pass`, `avatar`, `nombre`, `apellido`, `correo`) VALUES
+(1, 0, 0, 0, '1234', 'asdf', '', '', 'yaque', 'manuelcruz86@gmail.com'),
+(2, 0, 0, 0, '1234', 'asdf', '', '', 'yaque', 'manuelcruz86@gmail.com'),
+(3, 27, 2, 3, '12334', 'asdfsdf', '', 'maritza', 'yaque', 'manuelcruz86@gmail.com'),
+(4, 27, 2, 3, '12334', 'asdfsdf', '', 'maritza', 'yaque', 'manuelcruz86@gmail.com'),
+(5, 27, 2, 3, '12334', 'asdfsdf', '', 'maritza', 'yaque', 'manuelcruz86@gmail.com'),
+(6, 27, 2, 3, '12334', 'asdfsdf', '', 'maritza', 'yaque', 'manuelcruz86@gmail.com'),
+(7, 27, 2, 3, '12334', 'asdfsdf', '', 'maritza', 'yaque', 'manuelcruz86@gmail.com'),
+(8, 27, 2, 4, '1234', 'asdff', '', 'maritza', 'de la cruz', 'manuelcruz86@gmail.com'),
+(9, 1, 2, 3, 'asdfs', 'asdf', '', 'Manuel de la cruz', 'asdfsdf', 'manuelcruz86@gmail.com'),
+(10, 27, 3, 3, 'asdf', '1234', '', 'Manuel de la cruz', 'lopez', 'manuelcruz86@gmail.com'),
+(11, 27, 3, 4, 'asdff', 'asdf', '', 'Manuel de la cruz', 'asdf', 'asdf'),
+(12, 1, 2, 3, 'asdf', 'asdf', '', 'pruebas', 'asdf', 'aasdfsdf'),
+(13, 27, 5, 3, 'asdfff', 'asdff', '', 'asdfasdf', 'df33', 'manuelcruz86@gmail.com'),
+(14, 27, 5, 3, 'asdfff', 'asdff', '', 'asdfasdf', 'df33', 'manuelcruz86@gmail.com'),
+(15, 27, 5, 3, 'asdfff', 'asdff', '', 'asdfasdf', 'df33', 'manuelcruz86@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -414,6 +466,27 @@ INSERT INTO `pais` (`idpais`, `idcontinente`, `nombre`, `iniciales`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `permiso`
+--
+
+CREATE TABLE `permiso` (
+  `id_permiso` int(11) NOT NULL,
+  `nombre` varchar(11) COLLATE utf8_spanish2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `permiso`
+--
+
+INSERT INTO `permiso` (`id_permiso`, `nombre`) VALUES
+(1, 'Consultar'),
+(2, 'Agregar'),
+(3, 'Editar'),
+(4, 'Eliminar');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `puesto`
 --
 
@@ -467,6 +540,12 @@ INSERT INTO `sucursal` (`id_sucursal`, `razons`, `nombrec`, `Telefono`, `identif
 --
 
 --
+-- Indices de la tabla `asigna_permiso`
+--
+ALTER TABLE `asigna_permiso`
+  ADD PRIMARY KEY (`idasigna_menu`);
+
+--
 -- Indices de la tabla `contactos_e`
 --
 ALTER TABLE `contactos_e`
@@ -514,6 +593,12 @@ ALTER TABLE `pais`
   ADD UNIQUE KEY `nombre_UNIQUE` (`nombre`);
 
 --
+-- Indices de la tabla `permiso`
+--
+ALTER TABLE `permiso`
+  ADD PRIMARY KEY (`id_permiso`);
+
+--
 -- Indices de la tabla `puesto`
 --
 ALTER TABLE `puesto`
@@ -528,6 +613,12 @@ ALTER TABLE `sucursal`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `asigna_permiso`
+--
+ALTER TABLE `asigna_permiso`
+  MODIFY `idasigna_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `contactos_e`
@@ -551,7 +642,7 @@ ALTER TABLE `empresas`
 -- AUTO_INCREMENT de la tabla `login`
 --
 ALTER TABLE `login`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `menu`
@@ -564,6 +655,12 @@ ALTER TABLE `menu`
 --
 ALTER TABLE `pais`
   MODIFY `idpais` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=246;
+
+--
+-- AUTO_INCREMENT de la tabla `permiso`
+--
+ALTER TABLE `permiso`
+  MODIFY `id_permiso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `puesto`

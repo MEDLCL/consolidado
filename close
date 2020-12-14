@@ -1,0 +1,35 @@
+[33mcommit 568e833de90e18c1ead352e2c95c734d77f61c87[m[33m ([m[1;36mHEAD -> [m[1;32mdevelop[m[33m)[m
+Author: ManuelE <manuelcruz86@gmail.com>
+Date:   Sun Dec 13 20:21:19 2020 -0600
+
+    insercion de usuario y permisos falta los demas permisos y validar opciones de usuario como correo y pass
+
+[33mcommit dade5c56080211e9a092b7f4211b263e3d8d7f3f[m
+Author: ManuelE <manuelcruz86@gmail.com>
+Date:   Thu Dec 10 21:47:15 2020 -0600
+
+    revisando que valores devuelve los form
+
+[33mcommit 720c3518adfcc43e4d097c4559dbac1c3ee62e49[m[33m ([m[1;31mdevelop/develop[m[33m)[m
+Author: ManuelE <manuelcruz86@gmail.com>
+Date:   Mon Dec 7 20:35:51 2020 -0600
+
+    vistas empresas y usuario falta crud para cada uno
+
+[33mcommit 4282d7fead6276f5b92bfa1d13297bb37d3a73b5[m
+Author: ManuelE <manuelcruz86@gmail.com>
+Date:   Mon Oct 26 22:46:17 2020 -0600
+
+    cambiando configuracion del modal
+
+[33mcommit ea8f9b2d2c7b4c2f6770dba2584175a5da861fa7[m
+Author: ManuelE <manuelcruz86@gmail.com>
+Date:   Mon Oct 26 20:57:10 2020 -0600
+
+    corrigiendo errores
+
+[33mcommit d9cba36d160f6dacfa4c8fec118080b3ef929730[m
+Author: ManuelE <manuelcruz86@gmail.com>
+Date:   Sun Oct 4 20:56:27 2020 -0600
+
+    subiendo a git
