@@ -5,25 +5,27 @@
 ?>
 <div class="content-wrapper">
     <section class="content">
+
         <div id="datosusuario">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="box box-solid box-primary">
-                        <box class=" box-header with-border">
-                            <h3 class="text-center">CONTROL DE USUARIOS</h3>
-                        </box>
+            <form action="" method="post" class="form-ventical" id="formusuario">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-solid box-primary">
+                            <box class=" box-header with-border">
+                                <h3 class="text-center">CONTROL DE USUARIOS</h3>
+                            </box>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="box">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                            </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="box">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                </div>
 
-                            <div class="panel-body">
-                                <form action="" method="post" class="form-ventical" id="formusuario">
+                                <div class="panel-body">
+
                                     <div class="form-group">
                                         <label for="nombre">*Nombre:</label>
                                         <input type="text" name="nombre" id="nombre" class="form-control">
@@ -35,11 +37,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="">*Correo:</label>
-                                        <input type="text" name="correo" id="correo" class="form-control">
+                                        <input type="email" name="correo" id="correo" class="form-control">
                                     </div>
                                     <div class="form-group">
                                         <label for="login">*Login:</label>
-                                        <input type="text" name="login" id="login" class="form-control">
+                                        <input type="text" name="acceso" id="acceso" class="form-control">
                                     </div>
                                     <div class="form-group">
                                         <label for="pass">*Password</label>
@@ -78,40 +80,41 @@
                                             <span class="fa fa-floppy-o"></span>
                                         </button>
                                     </div>
-                                </form>
-                            </div> <!-- panel body -->
-                        </div><!-- panel -->
-                    </div> <!-- box -->
-                </div> <!-- col-md-6 -->
-                <div class="col-md-7">
-                    <div class="box">
-                        <div class="panel panel-default">
-                            <!-- Default panel contents -->
-                            <div class="panel-heading"><span class="text-center">Permisos</span></div>
-                            <div class="panel-body">
-                                <form action="" method="post" id="formpermisos">
-                                <!-- Table -->
-                                <table class="table table-bordered table-responsive table-hover" id="tablapermisos">
-                                    <thead>
-                                        <tr>
-                                            <th>Id</th>
-                                            <th>Menu</th>
-                                            <th>Sub Menu</th>
-                                            <th>Consultar</th>
-                                            <th>Agregar</th>
-                                            <th>Editar</th>
-                                            <th>Eliminar</th>
-                                        </tr>
-                                    </thead>
+                                    <!--  </form>-->
+                                </div> <!-- panel body -->
+                            </div><!-- panel -->
+                        </div> <!-- box -->
+                    </div> <!-- col-md-6 -->
+                    <div class="col-md-7">
+                        <div class="box">
+                            <div class="panel panel-default">
+                                <!-- Default panel contents -->
+                                <div class="panel-heading"><span class="text-center">Permisos</span></div>
+                                <div class="panel-body">
+                                    <!--  <form action="" method="post" id="formpermisos"> -->
+                                    <!-- Table -->
+                                    <table class="table table-bordered table-responsive table-hover" id="tablapermisos">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Menu</th>
+                                                <th>Sub Menu</th>
+                                                <th>Consultar</th>
+                                                <th>Agregar</th>
+                                                <th>Editar</th>
+                                                <th>Eliminar</th>
+                                            </tr>
+                                        </thead>
 
-                                </table>
-                                </form>
+                                    </table>
+                                    <!--   </form> -->
+                                </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
-                </div>
-            </div> <!-- row  -->
+                </div> <!-- row  -->
+            </form>
         </div> <!-- div datos usuario -->
         <div class="row" id="tablausuario">
             <div class="col-md-12">

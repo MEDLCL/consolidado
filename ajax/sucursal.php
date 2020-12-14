@@ -1,6 +1,6 @@
 <?php
 require_once "../config/Conexion.php";
-require_once "../config/funciones.php";
+//require_once "../config/funciones.php";
 
 $idsucursal = isset($_POST["idsucursal"]) ? $idsucursal = $_POST["idsucursal"] : $idsucursal = 0;
 $razons = isset($_POST['razons']) ? limpia($_POST['razons']) : $razons = '';

@@ -66,7 +66,7 @@ function grabarusuario() {
     var nombre = $("#nombre").val();
     var apellido = $("#apellido").val();
     var correo = $("#correo").val();
-    var login = $("#login").val();
+    var acceso = $("#acceso").val();
     var pass = $("#pass").val();
     var sucursal = $("#sucursal").prop("selectedIndex");
     var depto = $("#depto").prop("selectedIndex");
@@ -81,7 +81,7 @@ function grabarusuario() {
     } else if (correo.trim() == "") {
         alertify.alert("Campo en blanco", "Debe de ingresar Correo");
         return false;
-    } else if (login.trim() == "") {
+    } else if (acceso.trim() == "") {
         alertify.alert("Campo en blanco", "Debe de ingresar Login");
         return false;
     } else if (pass.trim() == "") {
@@ -98,7 +98,6 @@ function grabarusuario() {
         return false;
     } else {
         var form = new FormData($("#formusuario")[0]);
-        var formp = new FormData($("#formpermisos")[0]);
 
         $.ajax({
             url: "../ajax/usuario.php?op=guardaryeditar",
@@ -107,10 +106,12 @@ function grabarusuario() {
             contentType: false,
             processData: false,
             success: function(datos) {
-                if (datos) {
-                    console.log(datos);
+                if (datos == 1) {
+                    alertify.success("Usuario Registrado");
                     /*  $("#datosusuario").hide();
                      $("#tablausuario").show(); */
+                } else {
+                    alertify.error("Usuario no registrado");
                 }
             }
         });
