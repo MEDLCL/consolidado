@@ -1,7 +1,9 @@
 <?php
-include_once "../config/Conexion.php";
+//include_once "../config/Conexion.php";
 include_once "../config/funciones.php";
+include_once "../modelos/usuario.php";
 
+$usuario = new Usuario();
 
 $op = isset($_GET['op'])?$op = $_GET['op']: $op ='';
 $idusuario = isset ($_POST["idusuario"])?$idusuario = $_POST["idusuario"]:$idusuario = "0";
@@ -14,16 +16,19 @@ $idsucursal = isset($_POST["sucursal"])?$idsucursal = $_POST["sucursal"]:$idsucu
 $iddepto = isset($_POST["depto"])?$iddepto = $_POST["depto"]:$iddepto = "";
 $idpuesto = isset($_POST["puesto"])?$idpuesto = $_POST["puesto"]:$idpuesto = "";
 $avatar = isset($_POST["avatar_actual"])?$avatar = $_POST["avatar_actual"]:$avatar = "";
+$consultar = isset($_POST["consultar"])?$consultar = $_POST["consultar"]:$consultar = array();
+$agregar = isset($_POST["agregar"])?$agregar = $_POST["agregar"]:$agregar = array();
+$editar = isset($_POST["editar"])?$editar = $_POST["editar"]:$editar = array();
+$eliminar = isset($_POST["eliminar"])?$eliminar = $_POST["eliminar"]:$eliminar = array();
 
 switch ($op) {
     case 'permisos':
         $tabla = '<tbody>';
         try {
-           
-            $con = Conexion::getConexion();
-            $rspt = $con->prepare('SELECT * FROM menu WHERE id_Padre = 0');
-            $rspt->execute();
-            foreach ($rspt->fetchAll(PDO::FETCH_OBJ) as $menup){
+            $tipo = 0;
+            $res = $usuario->listarPermisoMenu($tipo);
+
+            foreach ($res as $menup){
 
                 $tabla = $tabla.'<tr>'
                             .'<td>'.$menup->id_menu.'</td>'
@@ -34,10 +39,10 @@ switch ($op) {
                             .'<td><input type ="checkbox" name= "editar[]" value = "'.$menup->id_menu.'" class="custom-control-input" disabled></td>'
                             .'<td><input type ="checkbox" name= "eliminar[]" value = "'.$menup->id_menu.'" class="custom-control-input" disabled></td>'
                 .'</tr>';
-                $rspt = $con->prepare("SELECT * FROM menu WHERE id_Padre = $menup->id_menu");
-                $rspt->execute();
+                
+                $res = $usuario->listarPermisoMenu($menup->id_menu);
 
-                foreach ($rspt->fetchAll(PDO::FETCH_OBJ)as $menui ) {
+                foreach ($res as $menui ) {
 
                     $tabla = $tabla.'<tr>'
                             .'<td>'.$menui->id_menu.'</td>' 
@@ -58,48 +63,37 @@ switch ($op) {
         break;
     case 'guardaryeditar':
         if ($idusuario =="0"){
-      try {
-          $con =  Conexion::getConexion();
-          $resp = $con->prepare("INSERT INTO login(id_sucursal,id_depto,id_puesto,acceso,pass,avatar,nombre,apellido,correo)
-                            VALUES (:id_sucursal,:id_depto,:id_puesto,:acceso,:pass,:avatar,:nombre,:apellido,:correo)");
-          $resp->bindParam(":id_sucursal",$idsucursal);
-          $resp->bindParam(":id_depto",$iddepto);
-          $resp->bindParam(":id_puesto",$idpuesto);
-          $resp->bindParam(":acceso",$acceso);
-          $resp->bindParam(":pass",$pass);
-          $resp->bindParam(":avatar",$avatar);
-          $resp->bindParam(":nombre",$nombre);
-          $resp->bindParam(":apellido",$apellido);
-          $resp->bindParam(":correo",$correo);
-          $resp->execute();
-          $idusuario = $con->lastInsertId();
-          $con = Conexion::cerrar();
-          if ($idusuario >0){
-            if (count($_POST["consultar"])>0){
-                $contador =0;
-                $consul = 1;
-                $con = Conexion::getConexion();
-                $res = $con->prepare("INSERT INTO  asigna_permiso(id_usuario, id_menu, id_permiso)
-                                    VALUES(:id_usuario,:id_menu,:id_permiso)");
-                 while ($contador < count($_POST["consultar"]))
-                {
-
-                    $res->bindParam(":id_usuario",$idusuario);
-                    $res->bindParam(":id_menu",$_POST["consultar"][$contador]);
-                    $res->bindParam(":id_permiso",$consul);
-                    $res->execute(); 
-                    $contador = $contador +1;
-                } 
-                $con= Conexion::cerrar();
-          }   
-        }
-        echo 1;
-      } catch (\Throwable $th) {
-         echo "Usuario no se pudo registrar: ".$th->getMessage();
-      }
+         $res =   $usuario->insertar($nombre,$apellido,$correo,$acceso,$pass,$idsucursal,$iddepto,$idpuesto,$consultarconsultar,  $agregar , $editar ,$eliminar);
+            echo isset ($res) ? "Usuario Registrado":"Error No se pudo Registrar Usuario";
     }
     break;
+    case 'listar':
+        $res = $usuario->listar();
+        $data = array();
+        foreach ($res as $reg) {
+            $data[] = array(
+                "0" => '<button class="btn btn-warning" onclick="mostrarsucursal(' . $reg->id_usuario . ')" data-toggle="modal"  data-target="#modalsucursal"  ><i class="fa fa-pencil"></i></button>',
+                "1" => ($reg->estado) ? '<button class="btn btn-danger" onclick="inactivar(' . $reg->id_usuario . ')"><i class="fa fa-close"></i></button>' : '<button class="btn btn-primary" onclick="activar(' . $reg->id_usuario . ')"><i class="fa fa-check"></i></button>',
+                "2" => $reg->nombre,
+                "3" => $reg->apellido,
+                "4" => $reg->correo,
+                "5" => $reg->acceso,
+                "6" =>"sucursal",
+                "7"=>"Depto",
+                "8" => "puesto",
+                "9" => "aavatar",
+                "10" => ($reg->estado)?'<span class="label bg-green">Activado</span>':'<span class="label bg-red">Desactivado</span>'
+            );
 
+        }               
+        $results = array(
+            "sEcho" => 1, //informacion para el datatable
+            "iTotalRecords" => count($data), //enviamos el total al datatable
+            "iTotalDisplayRecords" => count($data), //enviamos total de rgistror a utlizar
+            "aaData" => $data
+        );
+        echo json_encode($results);
+        break;
     default:
         # code...
         break;

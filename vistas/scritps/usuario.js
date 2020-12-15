@@ -4,6 +4,30 @@ function init() {
     llenadepto();
     llenapuesto();
     $("#datosusuario").hide();
+    llenausuarios();
+}
+
+function llenausuarios() {
+    tabla = $('#Tusuarios').dataTable({
+        "aProcessing": true, //Activamos el procesamiento del datatables
+        "aServerSide": true, //Paginacion y fltrado realizado por el servidor
+        dom: 'Bfrtip', //Definimos los elementos de control de tabla
+        buttons: ['copyHtml5', 'excelHtml5', 'pdfHtml5'],
+        "ajax": {
+            url: '../ajax/usuario.php?op=listar',
+            type: "get",
+            dataType: "json",
+            error: function(e) {
+                console.log(e.responseText);
+            }
+        },
+        "bDestroy": true,
+        "iDisplayLenth": 5, //paginacion
+        "order": [
+                [0, "desc"]
+            ] //order los datos
+
+    });
 }
 
 function cargarpermisos() {
@@ -106,7 +130,7 @@ function grabarusuario() {
             contentType: false,
             processData: false,
             success: function(datos) {
-                if (datos == 1) {
+                if (datos) {
                     alertify.success("Usuario Registrado");
                     /*  $("#datosusuario").hide();
                      $("#tablausuario").show(); */

@@ -1,5 +1,6 @@
 <?php
-    require_once  "../config/Conexion.php";
+    include_once  "../config/Conexion.php";
+
 $tabla= isset($_GET['tabla'])?$tabla = $_GET['tabla']:$tabla='';
 $campo= isset($_GET['campo'])?$campo=$_GET['campo']:$campo='';
 $id = isset($_POST['id'])?$id= $_POST['id']:$id='';

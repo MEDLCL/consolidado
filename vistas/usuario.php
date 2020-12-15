@@ -125,8 +125,8 @@
                         </button>
                     </div>
                     <div class="panel panel-default">
-                        <div class="panel-body">
-                            <table class="table table-bordered table-hover table-responsive table-hover">
+                        <div class="panel-body table-responsive">
+                            <table class="table table-bordered table-hover table-responsive table-hover" id="Tusuarios">
                                 <thead>
                                     <tr>
                                         <th>Editar</th>

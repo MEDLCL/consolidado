@@ -1,6 +1,7 @@
 <?php
 include_once "ConfigDB.php";
-class Conexion
+
+Class Conexion
 {
     private static $con = null;
 
