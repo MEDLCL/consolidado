@@ -27,7 +27,7 @@ switch ($_GET["op"]) {
             }
             try {
                 $fecha = date("Y-m-d");
-                $estado = '1';
+                $estado = 1;
                 $con = Conexion::getConexion();
                 $stmt = $con->prepare("INSERT INTO sucursal (razons,nombrec,Telefono,identificacion,direccion,logo,fechaingreso,estado) 
                                 VALUES (:razon,:nombrec,:tel,:identifi,:dir,:logo,:fecha,:estado)");
@@ -150,7 +150,7 @@ switch ($_GET["op"]) {
                 "3" => $reg->nombrec,
                 "4" => $reg->Telefono,
                 "5" => $reg->nombre . ' ' . $reg->iniciales,
-                "6" => "<img  src='../logos/" . $reg->logo . "'  width: '50px' height = '50px'>",
+                "6" => file_exists("../logos/".$reg->logo)? "<img  src='../logos/" . $reg->logo . "'  width= '50px' height= '50px'>": "<img src=''>",
                 "7" => $reg->identificacion,
                 "8" => $reg->direccion,
                 "9" => ($reg->estado)?'<span class="label bg-green">Activado</span>':'<span class="label bg-red">Desactivado</span>'

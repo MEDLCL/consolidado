@@ -1,3 +1,5 @@
+var tabla;
+
 function init() {
     cargarpermisos();
     llenasucursal();
@@ -95,16 +97,20 @@ function grabarusuario() {
     var sucursal = $("#sucursal").prop("selectedIndex");
     var depto = $("#depto").prop("selectedIndex");
     var puesto = $("#puesto").prop("selectedIndex");
-
+    var cont = 0;
     if (nombre.trim() == "") {
         alertify.alert("Campo en blanco", "Debe de ingresar el Nombre");
         return false;
     } else if (apellido.trim() == "") {
         alertify.alert("Campo en blanco", "Debe de ingresar Apellido");
         return false;
+    } else if (validaCorreo(correo) == false) {
+        alertify.alert("Correo No valido", "Debe de ingresar Correo valido");
+        return false;
     } else if (correo.trim() == "") {
         alertify.alert("Campo en blanco", "Debe de ingresar Correo");
         return false;
+
     } else if (acceso.trim() == "") {
         alertify.alert("Campo en blanco", "Debe de ingresar Login");
         return false;
@@ -121,6 +127,15 @@ function grabarusuario() {
         alertify.alert("Campo en blanco", "Debe de seleccionar Puesto");
         return false;
     } else {
+        $("#formusuario input[type= checkbox]").each(function() {
+            if (this.checked) {
+                cont = cont + 1;
+            }
+        });
+        if (cont == 0) {
+            alertify.alert("", "Debe de seleccionar almenos una opcion de Menu");
+            return false;
+        }
         var form = new FormData($("#formusuario")[0]);
 
         $.ajax({
@@ -131,9 +146,10 @@ function grabarusuario() {
             processData: false,
             success: function(datos) {
                 if (datos) {
+                    $('#Tusuarios').DataTable().ajax.reload();
                     alertify.success("Usuario Registrado");
-                    /*  $("#datosusuario").hide();
-                     $("#tablausuario").show(); */
+                    $("#datosusuario").hide();
+                    $("#tablausuario").show();
                 } else {
                     alertify.error("Usuario no registrado");
                 }

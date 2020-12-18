@@ -72,7 +72,7 @@
                                         <input type="file" name="avatar" id="avatar" class="form-control">
 
                                         <input type="hidden" name="avatar_actual" id="avatar_actual">
-                                        <img src="" alt="avatar" width="120px" height="150px">
+                                        <img id = "avatar_muestra" src="" alt="avatar" width="120px" height="150px">
                                     </div>
                                     <div class="form-group">
                                         <button class="btn btn-primary" type="button" onclick="grabarusuario()"

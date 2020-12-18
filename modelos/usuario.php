@@ -9,12 +9,12 @@ Class Usuario
 
     }
     
-    public function insertar ($nombre,$apellido,$correo,$acceso,$pass,$sucursal,$depto,$puesto,$pconsulta,$pagrega,$pedita,$peliminar){
+    public function insertar ($nombre,$apellido,$correo,$acceso,$pass,$sucursal,$depto,$puesto,$pconsulta,$pagrega,$pedita,$peliminar,$avatar){
         try {
-            $avatar = "";
+            $estado = 1;
             $con = Conexion::getConexion();
-            $resp = $con->prepare("INSERT INTO login(id_sucursal,id_depto,id_puesto,acceso,pass,avatar,nombre,apellido,correo)
-                            VALUES (:id_sucursal,:id_depto,:id_puesto,:acceso,:pass,:avatar,:nombre,:apellido,:correo)");
+            $resp = $con->prepare("INSERT INTO login(id_sucursal,id_depto,id_puesto,acceso,pass,avatar,nombre,apellido,correo,estado)
+                            VALUES (:id_sucursal,:id_depto,:id_puesto,:acceso,:pass,:avatar,:nombre,:apellido,:correo,:estado)");
           $resp->bindParam(":id_sucursal",$sucursal);
           $resp->bindParam(":id_depto",$depto);
           $resp->bindParam(":id_puesto",$puesto);
@@ -25,6 +25,7 @@ Class Usuario
           $resp->bindParam(":apellido",$apellido);
           $resp->bindParam(":correo",$correo);
           $resp->bindParam(":avatar",$avatar);
+          $resp->bindParam(":estado",$estado);
           $resp->execute();
           $idu = $con->lastInsertId();
           $con = Conexion::cerrar();

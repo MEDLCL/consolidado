@@ -59,16 +59,26 @@
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li class="active treeview">
+                    <li class=" treeview">
                         <a href="#">
                             <i class="fa fa-archive"></i> <span>Registros</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="active"><a href="empresas.php?tipo=agentee"><i class="fa fa-building"></i> Agente Embarcador</a></li>
-                            <li><a href="empresas.php?tipo=agenciac"><i class="fa fa-building"></i> Agencia de Carga</a></li>
+                        <ul class="active treeview-menu">
+                            <li class=""><a href="empresas.php?tipo=agentee"><i class="fa fa-building"></i> Agente
+                                    Embarcador</a></li>
+                            <li><a href="empresas.php?tipo=agenciac"><i class="fa fa-building"></i> Agencia de Carga</a>
+                            </li>
+                            <li><a href="empresas.php?tipo=aereolinea"><i class="fa fa-building"></i>Aereo-Linea</a></li>
+                            <li><a href="empresas.php?tipo=almacen"><i class="fa fa-building"></i>Almacenadora</a></li>
+                            <li><a href="empresas.php?tipo=cliente"><i class="fa fa-building"></i>Consignatario</a></li>
+                            <li><a href="empresas.php?tipo=consignado"><i class="fa fa-building"></i>Consignado</a></li>
+                            <li><a href="empresas.php?tipo=embarcador"><i class="fa fa-building"></i>Embarcador</a></li>
+                            <li><a href="empresas.php?tipo=naviera"><i class="fa fa-building"></i>Naviera</a></li>
+                            <li><a href="empresas.php?tipo=proveedor"><i class="fa fa-building"></i>Proveedor</a></li>
+                            <li><a href="empresas.php?tipo=transporte"><i class="fa fa-building"></i>Transportista</a></li>
                         </ul>
                     </li>
                     <li class="treeview">

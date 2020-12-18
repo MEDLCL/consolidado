@@ -7,8 +7,26 @@ if ($tipoe=='agentee'){
     $tipoempresa = 'AGENTE EMBARCADOR';
 } 
 else if ($tipoe =='agenciac'){
-    $tipoempresa = 'AGENCIA DE CCARGA';    
-}else{
+    $tipoempresa = 'AGENCIA DE CARGA'; 
+ }    
+else if ($tipoe=='aereolinea'){
+    $tipoempresa = 'Aereo-Linea';       
+}else if ($tipoe == 'almacen'){
+    $tipoempresa = 'Almacenadora';
+}else if ($tipoe == 'cliente'){
+    $tipoempresa = 'Consignatario';
+}else if ($tipoe == 'consignado'){
+    $tipoempresa = 'Consignado';
+}else if ($tipoe == 'embarcador'){
+    $tipoempresa = 'Embarcador';
+}else if ($tipoe=='naviera'){
+    $tipoempresa = 'Naviera';
+}else if ($tipoe =='proveedor'){
+    $tipoempresa ='Proveedor';
+}else if ($tipoe == 'transporte'){
+    $tipoempresa = 'Transportista';
+}
+else{
     $tipoempresa = "";
 }
 
