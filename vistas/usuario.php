@@ -72,12 +72,15 @@
                                         <input type="file" name="avatar" id="avatar" class="form-control">
 
                                         <input type="hidden" name="avatar_actual" id="avatar_actual">
-                                        <img id = "avatar_muestra" src="" alt="avatar" width="120px" height="150px">
+                                        <img id="avatar_muestra" src="" alt="avatar" width="150" height="120">
                                     </div>
                                     <div class="form-group">
                                         <button class="btn btn-primary" type="button" onclick="grabarusuario()"
                                             id="grabaru">Graba
                                             <span class="fa fa-floppy-o"></span>
+                                        </button>
+                                        <button class="btn btn-danger" type="button" onclick="cancelar()">Cancelar
+                                            <span class= "fa fa-close"></span>
                                         </button>
                                     </div>
                                     <!--  </form>-->
@@ -94,18 +97,7 @@
                                     <!--  <form action="" method="post" id="formpermisos"> -->
                                     <!-- Table -->
                                     <table class="table table-bordered table-responsive table-hover" id="tablapermisos">
-                                        <thead>
-                                            <tr>
-                                                <th>Id</th>
-                                                <th>Menu</th>
-                                                <th>Sub Menu</th>
-                                                <th>Consultar</th>
-                                                <th>Agregar</th>
-                                                <th>Editar</th>
-                                                <th>Eliminar</th>
-                                            </tr>
-                                        </thead>
-
+                                        
                                     </table>
                                     <!--   </form> -->
                                 </div>
@@ -126,11 +118,12 @@
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-body table-responsive">
-                            <table class="table table-bordered table-hover table-responsive table-hover" id="Tusuarios">
+                            <table class="table table-bordered table-hover table-responsive table-hover" id="Tusuarios"
+                                style="text-align: center;">
                                 <thead>
                                     <tr>
                                         <th>Editar</th>
-                                        <th>Activo/Inactivo</th>
+                                        <th>Activar/Desactivar</th>
                                         <th>Nombre</th>
                                         <th>Apellido</th>
                                         <th>Correo</th>

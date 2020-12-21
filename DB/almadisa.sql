@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 14-12-2020 a las 03:42:37
+-- Tiempo de generación: 21-12-2020 a las 06:27:41
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.2.33
 
@@ -20,6 +20,29 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `almadisa`
 --
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+CREATE DEFINER=`` PROCEDURE `prcListadoUsuarios` ()  NO SQL
+SELECT L.id_usuario,
+       L.nombre, 
+	   L.apellido,
+       L.correo,
+       L.acceso,
+       L.estado, 
+       L.avatar, 
+       concat (S.razons,' - ',PA.nombre) as  sucursal ,
+       D.nombre as depto,
+       P.nombre as puesto
+		FROM `login`  as L inner JOIN
+        	sucursal as S on S.id_sucursal = L.id_sucursal inner JOIN
+            depto as D on D.id_depto = L.id_depto inner join 
+            puesto as P on P.id_puesto = L.id_puesto INNER JOIN
+            pais as PA on PA.idpais = S.idpais$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -39,18 +62,13 @@ CREATE TABLE `asigna_permiso` (
 --
 
 INSERT INTO `asigna_permiso` (`idasigna_menu`, `id_usuario`, `id_menu`, `id_permiso`) VALUES
-(1, 14, 1, 1),
-(2, 14, 1, 1),
-(3, 14, 1, 1),
-(4, 14, 1, 1),
-(5, 14, 1, 1),
-(6, 14, 1, 1),
-(7, 14, 1, 1),
-(8, 14, 1, 1),
-(9, 14, 1, 1),
-(10, 15, 1, 1),
-(11, 15, 6, 1),
-(12, 15, 7, 1);
+(55, 55, 8, 1),
+(56, 55, 9, 1),
+(57, 55, 10, 1),
+(58, 52, 1, 1),
+(59, 52, 6, 1),
+(60, 52, 7, 1),
+(61, 53, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -154,29 +172,19 @@ CREATE TABLE `login` (
   `avatar` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
   `nombre` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
   `apellido` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
-  `correo` varchar(150) COLLATE utf8_spanish_ci NOT NULL
+  `correo` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
+  `estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `login`
 --
 
-INSERT INTO `login` (`id_usuario`, `id_sucursal`, `id_depto`, `id_puesto`, `acceso`, `pass`, `avatar`, `nombre`, `apellido`, `correo`) VALUES
-(1, 0, 0, 0, '1234', 'asdf', '', '', 'yaque', 'manuelcruz86@gmail.com'),
-(2, 0, 0, 0, '1234', 'asdf', '', '', 'yaque', 'manuelcruz86@gmail.com'),
-(3, 27, 2, 3, '12334', 'asdfsdf', '', 'maritza', 'yaque', 'manuelcruz86@gmail.com'),
-(4, 27, 2, 3, '12334', 'asdfsdf', '', 'maritza', 'yaque', 'manuelcruz86@gmail.com'),
-(5, 27, 2, 3, '12334', 'asdfsdf', '', 'maritza', 'yaque', 'manuelcruz86@gmail.com'),
-(6, 27, 2, 3, '12334', 'asdfsdf', '', 'maritza', 'yaque', 'manuelcruz86@gmail.com'),
-(7, 27, 2, 3, '12334', 'asdfsdf', '', 'maritza', 'yaque', 'manuelcruz86@gmail.com'),
-(8, 27, 2, 4, '1234', 'asdff', '', 'maritza', 'de la cruz', 'manuelcruz86@gmail.com'),
-(9, 1, 2, 3, 'asdfs', 'asdf', '', 'Manuel de la cruz', 'asdfsdf', 'manuelcruz86@gmail.com'),
-(10, 27, 3, 3, 'asdf', '1234', '', 'Manuel de la cruz', 'lopez', 'manuelcruz86@gmail.com'),
-(11, 27, 3, 4, 'asdff', 'asdf', '', 'Manuel de la cruz', 'asdf', 'asdf'),
-(12, 1, 2, 3, 'asdf', 'asdf', '', 'pruebas', 'asdf', 'aasdfsdf'),
-(13, 27, 5, 3, 'asdfff', 'asdff', '', 'asdfasdf', 'df33', 'manuelcruz86@gmail.com'),
-(14, 27, 5, 3, 'asdfff', 'asdff', '', 'asdfasdf', 'df33', 'manuelcruz86@gmail.com'),
-(15, 27, 5, 3, 'asdfff', 'asdff', '', 'asdfasdf', 'df33', 'manuelcruz86@gmail.com');
+INSERT INTO `login` (`id_usuario`, `id_sucursal`, `id_depto`, `id_puesto`, `acceso`, `pass`, `avatar`, `nombre`, `apellido`, `correo`, `estado`) VALUES
+(52, 27, 3, 6, '123456', '123456', '1608505306.png', 'Manuel', 'De La Cruz', 'manuelcruz86@gmail.com', 1),
+(53, 27, 1, 5, '1234', '1234', '', 'maritza', 'De La Cruz', 'itguatemala@gmail.com', 1),
+(54, 27, 2, 5, '1234', '1234', '', 'cambio uno', 'De La Cruz', 'manuelcruz86@gmail.com', 1),
+(55, 27, 1, 1, '1234', '1234', '', 'categoria', 'De La Cruz', 'itguatemala@gmail.com', 1);
 
 -- --------------------------------------------------------
 
@@ -186,8 +194,8 @@ INSERT INTO `login` (`id_usuario`, `id_sucursal`, `id_depto`, `id_puesto`, `acce
 
 CREATE TABLE `menu` (
   `id_menu` int(11) NOT NULL,
-  `nombre` varchar(75) COLLATE utf8_spanish2_ci NOT NULL,
-  `id_Padre` int(11) DEFAULT NULL
+  `nombre` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+  `id_Padre` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
@@ -197,7 +205,18 @@ CREATE TABLE `menu` (
 INSERT INTO `menu` (`id_menu`, `nombre`, `id_Padre`) VALUES
 (1, 'Administracion', 0),
 (6, 'Sucursales', 1),
-(7, 'Usuarios', 1);
+(7, 'Usuarios', 1),
+(8, 'Registros', 0),
+(9, 'Agente Embarcador', 8),
+(10, 'Agencia de Carga', 8),
+(11, 'Aéreo-linea', 8),
+(12, 'Almacenadora', 8),
+(13, 'Consignatario', 8),
+(14, 'Consignado', 8),
+(15, 'Embarcador', 8),
+(16, 'Naviera', 8),
+(17, 'Proveedor', 8),
+(18, 'Transportista', 8);
 
 -- --------------------------------------------------------
 
@@ -618,7 +637,7 @@ ALTER TABLE `sucursal`
 -- AUTO_INCREMENT de la tabla `asigna_permiso`
 --
 ALTER TABLE `asigna_permiso`
-  MODIFY `idasigna_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `idasigna_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT de la tabla `contactos_e`
@@ -642,13 +661,13 @@ ALTER TABLE `empresas`
 -- AUTO_INCREMENT de la tabla `login`
 --
 ALTER TABLE `login`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT de la tabla `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `pais`

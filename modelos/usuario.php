@@ -71,22 +71,102 @@ Class Usuario
                     }
              
                 }
-          }
+          }// fin if 
 
         } catch (\Throwable $th) {
-
+            return 0;
         }
         
 
     }
-    public function actualizar (){
+    public function editar ($idusuario,$nombre,$apellido,$correo,$acceso,$pass,$sucursal,$depto,$puesto,$pconsulta,$pagrega,$pedita,$peliminar,$avatar){
+        try {
+            $con = Conexion::getConexion();
+            $res = $con->prepare("UPDATE login 
+            SET id_sucursal=:id_sucursal,
+                id_puesto=:id_puesto,
+                id_depto=:id_depto,
+                acceso=:acceso,
+                nombre=:nombre,
+                apellido=:apellido,
+                correo=:correo,
+                avatar=:avatar
+     
+            WHERE id_usuario = :id_usuario");
 
+          $res->bindParam(":id_sucursal",$sucursal);
+          $res->bindParam(":id_depto",$depto);
+          $res->bindParam(":id_puesto",$puesto);
+          $res->bindParam(":acceso",$acceso);
+          $res->bindParam(":nombre",$nombre);
+          $res->bindParam(":apellido",$apellido);
+          $res->bindParam(":correo",$correo);
+          $res->bindParam(":avatar",$avatar);
+          $res->bindParam(":id_usuario",$idusuario);
+          $res->execute();
+        
+          if ($res !==false){
+
+        //$con->Conexion::close();
+          try {
+              $con = Conexion::getConexion();
+              $res = $con->prepare("DELETE FROM asigna_permiso  WHERE id_usuario = $idusuario ");
+              $res->execute();
+
+          } catch (\Throwable $th) {
+              //throw $th;
+          }
+            if (count($pconsulta)>0 || count ($pagrega)>0 || count ($pedita)>0 || count ($peliminar)>0){
+                $consulta = 1;
+                $agregar = 2;
+                $editar = 3;
+                $eliminar = 4;
+                try {
+                    $con = Conexion::getConexion();
+                    $res = $con->prepare("INSERT INTO  asigna_permiso(id_usuario, id_menu, id_permiso)
+                                                 VALUES(:id_usuario,:id_menu,:id_permiso)");
+                    foreach ($pconsulta as $value) {
+                         $res->bindParam(":id_usuario",$idusuario);
+                         $res->bindParam(":id_menu",$value);
+                         $res->bindParam(":id_permiso",$consulta);
+                         $res->execute();     
+                    }
+                    foreach ($pagrega as $value) {
+                        $res->bindParam(":id_usuario",$idusuario);
+                        $res->bindParam(":id_menu",$value);
+                        $res->bindParam(":id_permiso",$agregar);
+                        $res->execute();     
+                   }  
+                   foreach ($pedita as $value) {
+                    $res->bindParam(":id_usuario",$idusuario);
+                    $res->bindParam(":id_menu",$value);
+                    $res->bindParam(":id_permiso",$editar);
+                    $res->execute();     
+               } 
+                    foreach ($peliminar as $value) {
+                        $res->bindParam(":id_usuario",$idusuario);
+                        $res->bindParam(":id_menu",$value);
+                        $res->bindParam(":id_permiso",$eliminar);
+                        $res->execute();     
+                 }         
+
+                    $con = Conexion::cerrar();
+                    return 1;
+                } catch (\Throwable $th) {
+                    return NULL;
+                }
+         
+            }
+        } 
+        } catch (\Throwable $th) {
+            return NULL;
+        }
     }
     public function listar (){
 
         try {
             $con = Conexion::getConexion();
-            $resp = $con->prepare("SELECT * FROM login");
+            $resp = $con->prepare("CALL  prcListadoUsuarios();");
             $resp->execute();
             $resp = $resp->fetchAll(PDO::FETCH_OBJ);
             return $resp;
@@ -96,21 +176,54 @@ Class Usuario
         }
 
     }
-    public function activar(){
+    public function activar($idusuario){
+       try {
+
+        $con = Conexion::getConexion();
+        $res = $con->prepare("UPDATE login SET estado = 1 WHERE id_usuario = $idusuario");
+        $res->execute ();
+        if ($res->rowCount()>0){
+            return "1";
+        }
+    } catch (\Throwable $th) {
+            return "0";
+        }
+       
+    }
+    public function desactivar($idusuario){
+        $con = Conexion::getConexion();
+        $res = $con->prepare("UPDATE login SET estado = 0 WHERE id_usuario = $idusuario");
+        $res->execute ();
+        if ($res->rowCount()>0){
+            return "1";
+        }else{
+            return "0";
+            }
+    }
+
+
+    public function permisoAsignado ($idusuario){
+        $con = Conexion::getConexion();
+        $res = $con->prepare("SELECT * FROM asigna_permiso WHERE id_usuario = $idusuario and id_permiso = '1'" );
+        $res->execute();
+        $rows= $res->fetchAll(PDO::FETCH_OBJ);
+        return $rows;
 
     }
-    public function desactivar(){
-
-    }
-    public function consultarId(){
-
+    public function consultarId($idusuario){
+        $con = Conexion::getConexion();
+        $res = $con->prepare("SELECT * FROM login where id_usuario = $idusuario");
+        $res->execute();
+        $row = $res->fetch(PDO::FETCH_OBJ);
+        return $row;
     }
     public function listarPermisoMenu($tipo){
         $con = Conexion::getConexion();
+
         $res = $con->prepare("SELECT * FROM menu WHERE id_Padre = $tipo");
         $res->execute();
-        $row =$res->fetchAll(PDO::FETCH_OBJ);
-		return $row;
+        $rows =$res->fetchAll(PDO::FETCH_OBJ);
+		return $rows;
     }
 
 }

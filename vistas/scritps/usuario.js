@@ -1,7 +1,7 @@
 var tabla;
 
 function init() {
-    cargarpermisos();
+    //cargarpermisos(0);
     llenasucursal();
     llenadepto();
     llenapuesto();
@@ -32,12 +32,12 @@ function llenausuarios() {
     });
 }
 
-function cargarpermisos() {
+function cargarpermisos(idusuario) {
     $.ajax({
         type: "POST",
         dataType: "html",
-        url: "../ajax/usuario.php?op=permisos",
-        data: '',
+        url: "../ajax/usuario.php?op=permisos&idup=" + idusuario,
+        data: idusuario,
         success: function(resp) {
             $('#tablapermisos').append(resp);
         }
@@ -86,6 +86,7 @@ function nuevousuario() {
     limpiar();
     $("#datosusuario").show();
     $("#tablausuario").hide();
+    cargarpermisos(0);
 }
 
 function grabarusuario() {
@@ -147,7 +148,7 @@ function grabarusuario() {
             success: function(datos) {
                 if (datos) {
                     $('#Tusuarios').DataTable().ajax.reload();
-                    alertify.success("Usuario Registrado");
+                    alertify.success(datos);
                     $("#datosusuario").hide();
                     $("#tablausuario").show();
                 } else {
@@ -166,7 +167,7 @@ function cargatablausuarios() {
         dom: 'Bfrtip', //Definimos los elementos de control de tabla
         buttons: ['copyHtml5', 'excelHtml5', 'pdfHtml5'],
         "ajax": {
-            url: '../ajax/sucursal.php?op=listar',
+            url: '../ajax/usuario.php?op=listar',
             type: "get",
             dataType: "json",
             error: function(e) {
@@ -188,7 +189,7 @@ function limpiar() {
     $("#idusuario").val(0);
     $("#apellido").val("");
     $("#correo").val("");
-    $("#login").val("");
+    $("#acceso").val("");
     $("#pass").val("");
     $("#avatar").attr("src", "");
     $("#avatar_actual").val("");
@@ -198,6 +199,59 @@ function limpiar() {
     $("#depto").selectpicker('refresh');
     $("#puesto").val(0);
     $("#puesto").selectpicker("refresh");
+    $('#tablapermisos').html('');
+
 }
 
+function mostrarUsuario(idusuario) {
+    limpiar();
+
+    $.post("../ajax/usuario.php?op=mostrar", { idusuario: idusuario },
+        function(data, status) {
+
+            data = JSON.parse(data);
+            $("#datosusuario").show();
+            $("#tablausuario").hide();
+
+            $("#nombre").val(data['nombre']);
+            $("#apellido").val(data.apellido);
+            $("#correo").val(data.correo);
+            $("#acceso").val(data.acceso);
+            $("#sucursal").val(data.id_sucursal);
+            $("#sucursal").selectpicker('refresh');
+            $("#depto").val(data.id_depto);
+            $("#depto").selectpicker('refresh');
+            $("#puesto").val(data.id_puesto);
+            $("#puesto").selectpicker('refresh');
+            $("#avatar_actual").val(data.avatar);
+            $("#avatar_muestra").attr("src", "../img/avatar/" + data.avatar);
+            $("#idusuario").val(data.id_usuario);
+            cargarpermisos(data.id_usuario);
+        })
+}
+
+function cancelar() {
+    $("#datosusuario").hide();
+    $("#tablausuario").show();
+}
+
+function desactivar(idusuario) {
+    $.post("../ajax/usuario.php?op=desactivar", { idusuario: idusuario },
+        function(data, status) {
+            if (status == "success") {
+                $('#Tusuarios').DataTable().ajax.reload();
+                alertify.success("Usuario Desactivado");
+            }
+        })
+}
+
+function activar(idusuario) {
+    $.post("../ajax/usuario.php?op=activar", { idusuario: idusuario },
+        function(data, status) {
+            if (status == "success") {
+                $('#Tusuarios').DataTable().ajax.reload();
+                alertify.success("Usuario Activado");
+            }
+        })
+}
 init();
