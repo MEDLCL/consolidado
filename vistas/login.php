@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>SERCOGUA | ALMADISA</title>
 
-    <link rel="shortcut icon" href="../img/logo2.jfif" />
+    <link rel="shortcut icon" href="" />
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
@@ -52,21 +52,25 @@
 
             <form method="post" id="frmAcceso" action="">
                 <div class="form-group has-feedback">
+                    <input type="text" name="codigol" id="codigol" class='form-control' placeholder="codigo" onkeyup="mayusculas(this)">
+                    <span class='fa fa-circle-o form-control-feedback'> </span>
+                </div>
+
+                <div class="form-group has-feedback">
                     <input type="text" id="logina" name="logina" class="form-control" placeholder="Usuario">
 
                     <span class="fa fa-user form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="password" id="clavea" name="clavea" class="form-control" placeholder="Password"
-                        autocomplete="FALSE">
+                    <input type="password" id="clavea" name="clavea" class="form-control" placeholder="Password" autocomplete="FALSE">
                     <span class="fa fa-key form-control-feedback"></span>
-                </div>   
+                </div>
                 <div class="row">
                     <div class="col-xs-8">
 
                     </div><!-- /.col -->
                     <div class="col-xs-4">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Ingresar</button>
+                        <button type="button" onclick="ingresar()" class="btn btn-primary btn-block btn-flat">Ingresar</button>
                     </div><!-- /.col -->
                 </div>
             </form>
@@ -87,6 +91,7 @@
     <script type="text/javascript" src="../plantilla/js/adminlte.min.js"></script><!-- AdminLTE App -->
 
     <!--dataTables-->
+    <script src="../vistas/scritps/funciones.js"></script>
     <script src="../plantilla/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../plantilla/datatables/js/dataTables.buttons.min.js"></script>
     <script src="../plantilla/datatables/js/buttons.html5.min.js"></script>
@@ -97,6 +102,7 @@
     <script src="../plantilla/js/bootbox.min.js"></script>
     <script src="../plantilla/plugins/bootstrap-selected/js/bootstrap-select.min.js"></script>
     <script src="../plantilla/plugins/alertify/alertify.js"></script>
+    <script src="scritps/login.js"></script>
 </body>
 
 </html>

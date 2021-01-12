@@ -52,17 +52,19 @@ function mostrarsucursal(idsucursal) {
 }
 
 function editarinsertar() {
-    var form = new FormData($("#formsucursal")[0]);
     var razons = $("#razons").val();
     var nombrec = $("#nombrec").val();
     var telefono = $("#Telefono").val();
     var pais = $("#pais").prop("selectedIndex");
     var dni = $("#identificacion").val();
     var dir = $("#direccion").val();
+
+    var form = new FormData($("#formsucursal")[0]);
     if (razons.trim() == "") {
         alertify.alert("Campo Obligatorio", "Debe de ingresar Razon social");
         return false;
-    } else if (nombrec.trim() == "") {
+    } else
+    if (nombrec.trim() == "") {
         alertify.alert("Campo Obligatorio", "Debe de ingresar Nombre Comercial");
         return false;
     } else if (telefono.trim() == "") {
@@ -78,7 +80,20 @@ function editarinsertar() {
         alertify.alert("Campo Obligatorio", "Debe de ingresar la direccion");
         return false;
     }
-
+    // envio de datos para generar codigo de la sucursal
+    if ($("#idsucursal").val() == 0) {
+        $.ajax({
+            url: "../ajax/sucursal.php?op=codigo",
+            type: "POST",
+            data: form,
+            contentType: false,
+            processData: false,
+            success: function(datos) {
+                $('#codigo').val(datos);
+            }
+        });
+    }
+    // envio de los parametros a grabar
     $.ajax({
         url: "../ajax/sucursal.php?op=guardaryeditar",
         type: "POST",
@@ -87,10 +102,10 @@ function editarinsertar() {
         processData: false,
         success: function(datos) {
             if (datos == 1) {
-                limpiar();
+                //limpiar();
                 $('#listadosucursal').DataTable().ajax.reload();
                 alertify.success("Proceso Realizado con exito");
-                $("#modalsucursal").modal("hide");
+                // $("#modalsucursal").modal("hide");
             } else {
                 alertify.error("Proceso no se pudo realizar") + " " + datos;
             }
@@ -108,6 +123,7 @@ function limpiar() {
     $("#actualizadatos").html("Grabar")
     $("#pais").val(0);
     $("#pais").selectpicker('refresh');
+    $('#codigo').val('');
 
 }
 
@@ -151,14 +167,18 @@ function inactivar(idsucursal) {
     });
 }
 
-function cargapais(){
-    $.post (
-        '../modelos/pais.php?op=pais&tabla=pais&campo=nombre',{},
-        function(data,status){
+function cargapais() {
+    $.post(
+        '../modelos/pais.php?op=pais&tabla=pais&campo=nombre', {},
+        function(data, status) {
             $('#pais').html(data);
             $("#pais").val(0);
             $("#pais").selectpicker('refresh');
         }
     );
+}
+
+function mayu(e) {
+    $(this).val(mayusculas(e));
 }
 init();

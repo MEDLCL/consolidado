@@ -138,7 +138,9 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-
+                                                    <th>
+                                                    <button type="button" class="btn btn-warning"><span class='fa fa-trash-o'></span>  </button>
+                                                    </th>
                                                 </tr>
                                             </tbody>
                                         </table>

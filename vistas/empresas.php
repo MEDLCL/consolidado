@@ -1,6 +1,11 @@
 <?php
-    include_once "../inc/head.php";
-    include_once "../inc/header.php";
+ob_start();
+session_start();
+
+if (!$_SESSION['nombre']) {
+    header('LOCATION: ../index.php');
+} else {
+
 
 $tipoe = isset ($_GET['tipo'])?$tipoe = $_GET['tipo'] :$tipoe ='';
 if ($tipoe=='agentee'){
@@ -29,7 +34,8 @@ else if ($tipoe=='aereolinea'){
 else{
     $tipoempresa = "";
 }
-
+require_once("../inc/head.php");
+require_once("../inc/header.php");
 ?>
 
 <div class="content-wrapper">
@@ -96,3 +102,7 @@ $(document).ready(function() {
     $('#tabempresa li:first-child a').tab('show')
 });
 </script>
+<?php 
+}
+ob_end_flush();
+?>

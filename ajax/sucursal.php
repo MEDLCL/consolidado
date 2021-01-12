@@ -1,6 +1,6 @@
 <?php
 require_once "../config/Conexion.php";
-//require_once "../config/funciones.php";
+require_once "../config/funciones.php";
 
 $idsucursal = isset($_POST["idsucursal"]) ? $idsucursal = $_POST["idsucursal"] : $idsucursal = 0;
 $razons = isset($_POST['razons']) ? limpia($_POST['razons']) : $razons = '';
@@ -10,7 +10,7 @@ $pais = isset($_POST['pais']) ? $_POST['pais'] : $pais = 0;
 $identificacion = isset($_POST['identificacion']) ? limpia($_POST['identificacion']) : $identificacion = '';
 $direccion = isset($_POST['direccion']) ? limpia($_POST['direccion']) : $direccion = '';
 $logo = isset($_POST['logo']) ? limpia($_POST['logo']) : $logo = '';
-
+$codigo = isset($_POST['codigo'])?limpia($_POST['codigo']):$codigo='';
 
 
 switch ($_GET["op"]) {
@@ -29,8 +29,8 @@ switch ($_GET["op"]) {
                 $fecha = date("Y-m-d");
                 $estado = 1;
                 $con = Conexion::getConexion();
-                $stmt = $con->prepare("INSERT INTO sucursal (razons,nombrec,Telefono,identificacion,direccion,logo,fechaingreso,estado) 
-                                VALUES (:razon,:nombrec,:tel,:identifi,:dir,:logo,:fecha,:estado)");
+                $stmt = $con->prepare("INSERT INTO sucursal (razons,nombrec,Telefono,identificacion,direccion,logo,fechaingreso,estado,codigo) 
+                                VALUES (:razon,:nombrec,:tel,:identifi,:dir,:logo,:fecha,:estado,:codigo)");
                 $stmt->bindParam(':razon', $razons);
                 $stmt->bindParam(':nombrec', $nombrec);
                 $stmt->bindParam(':tel', $telefono);
@@ -39,6 +39,7 @@ switch ($_GET["op"]) {
                 $stmt->bindParam(':logo', $logo);
                 $stmt->bindParam(":fecha", $fecha);
                 $stmt->bindParam(":estado", $estado);
+                $stmt->bindParam(":codigo",$codigo);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     echo  1;
@@ -165,4 +166,26 @@ switch ($_GET["op"]) {
         echo json_encode($results);
         $con = Conexion::cerrar();
         break;
+        case 'codigo':
+                try {
+
+                    $con = Conexion::getConexion();
+                    $con->beginTransaction();
+                    $rspt = $con->prepare('SELECT count(*)AS cont FROM sucursal');
+                    $rspt->execute();
+                    $rspt = $rspt->fetch(PDO::FETCH_OBJ);
+                    $cont = $rspt->cont+1;
+                    $codigo = substr($nombrec,0,3);
+                    $rsppais = $con->prepare("SELECT * FROM pais where idpais = $pais");
+                    $rsppais->execute();
+                    $rsppais= $rsppais->fetch(PDO::FETCH_OBJ);
+                    $codigo = strtoupper($codigo.$rsppais->iniciales.$cont);
+                    $con->commit();
+                    echo $codigo;
+                } catch (\Throwable $th) {
+                    $con->rollBack();
+                    $codigo = '';
+                    echo $codigo;
+                }
+            break;
 }

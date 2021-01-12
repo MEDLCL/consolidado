@@ -191,7 +191,7 @@ function limpiar() {
     $("#correo").val("");
     $("#acceso").val("");
     $("#pass").val("");
-    $("#avatar").attr("src", "");
+    $("#avatar_muestra").attr("src", "");
     $("#avatar_actual").val("");
     $("#sucursal").val(0);
     $("#sucursal").selectpicker('refresh');

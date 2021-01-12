@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 21-12-2020 a las 06:27:41
+-- Tiempo de generación: 12-01-2021 a las 03:27:12
 -- Versión del servidor: 10.4.14-MariaDB
 -- Versión de PHP: 7.2.33
 
@@ -25,7 +25,7 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`` PROCEDURE `prcListadoUsuarios` ()  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prcListadoUsuarios` ()  NO SQL
 SELECT L.id_usuario,
        L.nombre, 
 	   L.apellido,
@@ -42,33 +42,54 @@ SELECT L.id_usuario,
             puesto as P on P.id_puesto = L.id_puesto INNER JOIN
             pais as PA on PA.idpais = S.idpais$$
 
+CREATE DEFINER=`` PROCEDURE `prclogin` (IN `codigol` VARCHAR(30), IN `usuariol` VARCHAR(30), IN `passl` VARCHAR(30))  NO SQL
+select L.id_usuario,
+	   L.id_sucursal,
+       L.nombre,
+       L.apellido,
+       L.correo,
+       L.avatar,
+       S.logo,
+       S.direccion,
+       S.Telefono,
+       S.identificacion,
+       S.idpais,
+       P.nombre as puesto
+		from login as L INNER JOIN
+            sucursal as S on S.id_sucursal = L.id_sucursal INNER JOIN 
+            puesto as P on P.id_puesto = L.id_puesto
+ where L.acceso = usuariol and L.pass = passl 
+ 	   and S.codigo = codigol
+       and L.estado = 1$$
+
 DELIMITER ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `asigna_permiso`
+-- Estructura de tabla para la tabla `asigna_menu`
 --
 
-CREATE TABLE `asigna_permiso` (
+CREATE TABLE `asigna_menu` (
   `idasigna_menu` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  `id_menu` int(11) NOT NULL,
-  `id_permiso` int(11) NOT NULL
+  `id_menu` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
--- Volcado de datos para la tabla `asigna_permiso`
+-- Volcado de datos para la tabla `asigna_menu`
 --
 
-INSERT INTO `asigna_permiso` (`idasigna_menu`, `id_usuario`, `id_menu`, `id_permiso`) VALUES
-(55, 55, 8, 1),
-(56, 55, 9, 1),
-(57, 55, 10, 1),
-(58, 52, 1, 1),
-(59, 52, 6, 1),
-(60, 52, 7, 1),
-(61, 53, 1, 1);
+INSERT INTO `asigna_menu` (`idasigna_menu`, `id_usuario`, `id_menu`) VALUES
+(55, 55, 8),
+(56, 55, 9),
+(57, 55, 10),
+(61, 53, 1),
+(62, 52, 1),
+(63, 52, 6),
+(64, 52, 7),
+(65, 52, 8),
+(66, 52, 9);
 
 -- --------------------------------------------------------
 
@@ -79,11 +100,11 @@ INSERT INTO `asigna_permiso` (`idasigna_menu`, `id_usuario`, `id_menu`, `id_perm
 CREATE TABLE `contactos_e` (
   `id_contacto` int(11) NOT NULL,
   `id_empresa` int(11) NOT NULL,
-  `nombre` varchar(75) COLLATE utf8_spanish_ci NOT NULL,
-  `correo` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
-  `telefono` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `puesto` varchar(50) COLLATE utf8_spanish_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  `nombre` varchar(75) COLLATE utf8_spanish2_ci NOT NULL,
+  `correo` varchar(150) COLLATE utf8_spanish2_ci NOT NULL,
+  `telefono` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
+  `puesto` varchar(50) COLLATE utf8_spanish2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- --------------------------------------------------------
 
@@ -93,8 +114,8 @@ CREATE TABLE `contactos_e` (
 
 CREATE TABLE `continente` (
   `idcontinente` int(11) NOT NULL,
-  `nombre` varchar(45) COLLATE latin1_spanish_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+  `nombre` varchar(45) COLLATE utf8_spanish2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `continente`
@@ -144,17 +165,17 @@ CREATE TABLE `empresas` (
   `id_empresa` int(11) NOT NULL,
   `id_sucursal` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
-  `Razons` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
-  `Nombrec` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
-  `identificacion` varchar(75) COLLATE utf8_spanish_ci NOT NULL,
-  `direccion` varchar(1000) COLLATE utf8_spanish_ci NOT NULL,
-  `telefono` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `Tipoe` varchar(25) COLLATE utf8_spanish_ci NOT NULL,
-  `codigo` varchar(25) COLLATE utf8_spanish_ci NOT NULL,
+  `Razons` varchar(150) COLLATE utf8_spanish2_ci NOT NULL,
+  `Nombrec` varchar(150) COLLATE utf8_spanish2_ci NOT NULL,
+  `identificacion` varchar(75) COLLATE utf8_spanish2_ci NOT NULL,
+  `direccion` varchar(1000) COLLATE utf8_spanish2_ci NOT NULL,
+  `telefono` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
+  `Tipoe` varchar(25) COLLATE utf8_spanish2_ci NOT NULL,
+  `codigo` varchar(25) COLLATE utf8_spanish2_ci NOT NULL,
   `estado` tinyint(1) NOT NULL,
   `porcentaje_comision` float NOT NULL,
-  `tipo_comision` varchar(15) COLLATE utf8_spanish_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  `tipo_comision` varchar(15) COLLATE utf8_spanish2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- --------------------------------------------------------
 
@@ -167,14 +188,14 @@ CREATE TABLE `login` (
   `id_sucursal` int(11) NOT NULL,
   `id_depto` int(11) NOT NULL,
   `id_puesto` int(11) NOT NULL,
-  `acceso` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `pass` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
-  `avatar` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
-  `nombre` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
-  `apellido` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
-  `correo` varchar(150) COLLATE utf8_spanish_ci NOT NULL,
+  `acceso` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
+  `pass` varchar(150) COLLATE utf8_spanish2_ci NOT NULL,
+  `avatar` varchar(150) COLLATE utf8_spanish2_ci NOT NULL,
+  `nombre` varchar(150) COLLATE utf8_spanish2_ci NOT NULL,
+  `apellido` varchar(150) COLLATE utf8_spanish2_ci NOT NULL,
+  `correo` varchar(150) COLLATE utf8_spanish2_ci NOT NULL,
   `estado` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `login`
@@ -227,9 +248,9 @@ INSERT INTO `menu` (`id_menu`, `nombre`, `id_Padre`) VALUES
 CREATE TABLE `pais` (
   `idpais` int(11) NOT NULL,
   `idcontinente` int(11) NOT NULL,
-  `nombre` varchar(100) CHARACTER SET utf8 NOT NULL,
-  `iniciales` varchar(5) CHARACTER SET utf8 NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  `nombre` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
+  `iniciales` varchar(5) COLLATE utf8_spanish2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `pais`
@@ -543,25 +564,26 @@ CREATE TABLE `sucursal` (
   `logo` varchar(100) COLLATE utf8_spanish2_ci DEFAULT NULL,
   `fechaingreso` date DEFAULT NULL,
   `estado` tinyint(1) DEFAULT NULL,
-  `idpais` int(11) NOT NULL
+  `idpais` int(11) NOT NULL,
+  `codigo` varchar(30) COLLATE utf8_spanish2_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `sucursal`
 --
 
-INSERT INTO `sucursal` (`id_sucursal`, `razons`, `nombrec`, `Telefono`, `identificacion`, `direccion`, `logo`, `fechaingreso`, `estado`, `idpais`) VALUES
-(1, 'Servicios Comerciales de Guatemala', 'Sercogua', '502230370004554', '22354589', '0 calle b 17-10 colonia el maestro zona 15, Guatemala', 'logo2.jfif', '2020-11-14', 1, 92),
-(27, 'almadisa', 'Sercogua', '50222123085', '123445', '', '', '2020-11-14', 1, 92);
+INSERT INTO `sucursal` (`id_sucursal`, `razons`, `nombrec`, `Telefono`, `identificacion`, `direccion`, `logo`, `fechaingreso`, `estado`, `idpais`, `codigo`) VALUES
+(1, 'Servicios Comerciales de Guatemala', 'Sercogua', '50223037000', '22354589', '0 calle b 17-10 colonia el maestro zona 15, Guatemala', 'logo2.jfif', '2021-01-06', 1, 92, 'SERGT1'),
+(27, 'Almacenamiento Manejo y Distribuci&oacute;n de Guatemala', 'Almadisa', '50222123085', '123445', 'Interior Alpasa', '', '2021-01-06', 1, 92, 'ALMGT1');
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `asigna_permiso`
+-- Indices de la tabla `asigna_menu`
 --
-ALTER TABLE `asigna_permiso`
+ALTER TABLE `asigna_menu`
   ADD PRIMARY KEY (`idasigna_menu`);
 
 --
@@ -634,10 +656,10 @@ ALTER TABLE `sucursal`
 --
 
 --
--- AUTO_INCREMENT de la tabla `asigna_permiso`
+-- AUTO_INCREMENT de la tabla `asigna_menu`
 --
-ALTER TABLE `asigna_permiso`
-  MODIFY `idasigna_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+ALTER TABLE `asigna_menu`
+  MODIFY `idasigna_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT de la tabla `contactos_e`

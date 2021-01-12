@@ -16,10 +16,7 @@ $idsucursal = isset($_POST["sucursal"]) ? $idsucursal = limpia($_POST["sucursal"
 $iddepto = isset($_POST["depto"]) ? $iddepto = $_POST["depto"] : $iddepto = "";
 $idpuesto = isset($_POST["puesto"]) ? $idpuesto = $_POST["puesto"] : $idpuesto = "";
 $avatar = isset($_POST["avatar"]) ? $avatar = $_POST["avatar"] : $avatar = "";
-$consultar = isset($_POST["consultar"]) ? $consultar = $_POST["consultar"] : $consultar = array();
-$agregar = isset($_POST["agregar"]) ? $agregar = $_POST["agregar"] : $agregar = array();
-$editar = isset($_POST["editar"]) ? $editar = $_POST["editar"] : $editar = array();
-$eliminar = isset($_POST["eliminar"]) ? $eliminar = $_POST["eliminar"] : $eliminar = array();
+$menuitem = isset($_POST["consultar"]) ? $menuitem = $_POST["consultar"] : $menuitem = array();
 
 switch ($op) {
     case 'permisos':
@@ -30,16 +27,13 @@ switch ($op) {
                         <th>Id</th>
                         <th>Menu</th>
                         <th>Sub Menu</th>
-                        <th>Consultar</th>
-                        <th>Agregar</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
+                        <th>Check</th>
                     </tr>
                  </thead>
         <tbody>';
         try {
             $tipo = 0;
-            $res1 = $usuario->permisoAsignado($_GET['idup']);
+            $res1 = $usuario->menuAsignado($_GET['idup']);
             $res = $usuario->listarPermisoMenu($tipo);
             
             $valores = array();
@@ -57,9 +51,6 @@ switch ($op) {
                     . '<td>' . $menup->nombre . '</td>'
                     . '<td></td>'
                     . '<td><input type ="checkbox" '.$sw.' name= "consultar[]"  value = "' . $menup->id_menu . '" class="custom-control-input"></td>'
-                    . '<td><input type ="checkbox" name= "agregar[]" value = "' . $menup->id_menu . '" class="custom-control-input" disabled></td>'
-                    . '<td><input type ="checkbox" name= "editar[]" value = "' . $menup->id_menu . '" class="custom-control-input" disabled></td>'
-                    . '<td><input type ="checkbox" name= "eliminar[]" value = "' . $menup->id_menu . '" class="custom-control-input" disabled></td>'
                     . '</tr>';
 
                 $res = $usuario->listarPermisoMenu($menup->id_menu);
@@ -71,9 +62,6 @@ switch ($op) {
                         . '<td></td>'
                         . '<td>' . $menui->nombre . '</td>'
                         . '<td><input type ="checkbox" '.$sw.' name= "consultar[]" value = "' . $menui->id_menu . '" class="custom-control-input"></td>'
-                        . '<td><input type ="checkbox" name= "agregar[]" value = "' . $menui->id_menu . '" class="custom-control-input"></td>'
-                        . '<td><input type ="checkbox" name= "editar[]" value = "' . $menui->id_menu . '" class="custom-control-input"></td>'
-                        . '<td><input type ="checkbox" name= "eliminar[]" value = "' . $menui->id_menu . '" class="custom-control-input"></td>'
                         . '</tr>';
                 }
             }
@@ -94,7 +82,7 @@ switch ($op) {
                     move_uploaded_file($_FILES['avatar']['tmp_name'], "../img/avatar/" . $avatar);
                 }
             }
-            $res =   $usuario->insertar($nombre, $apellido, $correo, $acceso, $pass, $idsucursal, $iddepto, $idpuesto, $consultar,  $agregar, $editar, $eliminar, $avatar);
+            $res =   $usuario->insertar($nombre, $apellido, $correo, $acceso, $pass, $idsucursal, $iddepto, $idpuesto,$avatar ,$menuitem);
             echo isset($res) ? "Usuario Registrado" : "Error No se pudo Registrar Usuario";
         } else {
             if (!file_exists($_FILES['avatar']['tmp_name']) || !is_uploaded_file($_FILES['avatar']['tmp_name'])) {
@@ -114,7 +102,7 @@ switch ($op) {
                     }
                 }
             }
-            $res = $usuario->editar($idusuario,$nombre, $apellido, $correo, $acceso, $pass, $idsucursal, $iddepto, $idpuesto, $consultar,  $agregar, $editar, $eliminar, $avatar);
+            $res = $usuario->editar($idusuario,$nombre, $apellido, $correo, $acceso, $pass, $idsucursal, $iddepto, $idpuesto, $avatar,$menuitem);
                 echo isset($res) ? "Usuario Actualizado" : "Error No se pudo Actualizar Usuario";
         }
 

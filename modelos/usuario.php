@@ -9,7 +9,7 @@ Class Usuario
 
     }
     
-    public function insertar ($nombre,$apellido,$correo,$acceso,$pass,$sucursal,$depto,$puesto,$pconsulta,$pagrega,$pedita,$peliminar,$avatar){
+    public function insertar ($nombre,$apellido,$correo,$acceso,$pass,$sucursal,$depto,$puesto,$avatar,$pconsulta){
         try {
             $estado = 1;
             $con = Conexion::getConexion();
@@ -30,40 +30,17 @@ Class Usuario
           $idu = $con->lastInsertId();
           $con = Conexion::cerrar();
           if ($idu >0){
-                if (count($pconsulta)>0 || count ($pagrega)>0 || count ($pedita)>0 || count ($peliminar)>0){
-                    $consulta = 1;
-                    $agregar = 2;
-                    $editar = 3;
-                    $eliminar = 4;
+                if (count($pconsulta)>0){
                     try {
                         $con = Conexion::getConexion();
-                        $res = $con->prepare("INSERT INTO  asigna_permiso(id_usuario, id_menu, id_permiso)
-                                                     VALUES(:id_usuario,:id_menu,:id_permiso)");
+                        $res = $con->prepare("INSERT INTO  asigna_menu(id_usuario, id_menu)
+                                                     VALUES(:id_usuario,:id_menu)");
                         foreach ($pconsulta as $value) {
                              $res->bindParam(":id_usuario",$idu);
                              $res->bindParam(":id_menu",$value);
-                             $res->bindParam(":id_permiso",$consulta);
                              $res->execute();     
                         }
-                        foreach ($pagrega as $value) {
-                            $res->bindParam(":id_usuario",$idu);
-                            $res->bindParam(":id_menu",$value);
-                            $res->bindParam(":id_permiso",$agregar);
-                            $res->execute();     
-                       }  
-                       foreach ($pedita as $value) {
-                        $res->bindParam(":id_usuario",$idu);
-                        $res->bindParam(":id_menu",$value);
-                        $res->bindParam(":id_permiso",$editar);
-                        $res->execute();     
-                   } 
-                        foreach ($peliminar as $value) {
-                            $res->bindParam(":id_usuario",$idu);
-                            $res->bindParam(":id_menu",$value);
-                            $res->bindParam(":id_permiso",$eliminar);
-                            $res->execute();     
-                     }         
-
+                        
                         $con = Conexion::cerrar();
                         return 1;
                     } catch (\Throwable $th) {
@@ -79,7 +56,7 @@ Class Usuario
         
 
     }
-    public function editar ($idusuario,$nombre,$apellido,$correo,$acceso,$pass,$sucursal,$depto,$puesto,$pconsulta,$pagrega,$pedita,$peliminar,$avatar){
+    public function editar ($idusuario,$nombre,$apellido,$correo,$acceso,$pass,$sucursal,$depto,$puesto,$avatar,$pconsulta){
         try {
             $con = Conexion::getConexion();
             $res = $con->prepare("UPDATE login 
@@ -110,46 +87,24 @@ Class Usuario
         //$con->Conexion::close();
           try {
               $con = Conexion::getConexion();
-              $res = $con->prepare("DELETE FROM asigna_permiso  WHERE id_usuario = $idusuario ");
+              $res = $con->prepare("DELETE FROM asigna_menu  WHERE id_usuario = $idusuario ");
               $res->execute();
 
           } catch (\Throwable $th) {
               //throw $th;
           }
-            if (count($pconsulta)>0 || count ($pagrega)>0 || count ($pedita)>0 || count ($peliminar)>0){
-                $consulta = 1;
-                $agregar = 2;
-                $editar = 3;
-                $eliminar = 4;
+            if (count($pconsulta)>0){
+            
                 try {
                     $con = Conexion::getConexion();
-                    $res = $con->prepare("INSERT INTO  asigna_permiso(id_usuario, id_menu, id_permiso)
-                                                 VALUES(:id_usuario,:id_menu,:id_permiso)");
+                    $res = $con->prepare("INSERT INTO  asigna_menu(id_usuario, id_menu )
+                                                 VALUES(:id_usuario,:id_menu)");
                     foreach ($pconsulta as $value) {
                          $res->bindParam(":id_usuario",$idusuario);
                          $res->bindParam(":id_menu",$value);
-                         $res->bindParam(":id_permiso",$consulta);
                          $res->execute();     
                     }
-                    foreach ($pagrega as $value) {
-                        $res->bindParam(":id_usuario",$idusuario);
-                        $res->bindParam(":id_menu",$value);
-                        $res->bindParam(":id_permiso",$agregar);
-                        $res->execute();     
-                   }  
-                   foreach ($pedita as $value) {
-                    $res->bindParam(":id_usuario",$idusuario);
-                    $res->bindParam(":id_menu",$value);
-                    $res->bindParam(":id_permiso",$editar);
-                    $res->execute();     
-               } 
-                    foreach ($peliminar as $value) {
-                        $res->bindParam(":id_usuario",$idusuario);
-                        $res->bindParam(":id_menu",$value);
-                        $res->bindParam(":id_permiso",$eliminar);
-                        $res->execute();     
-                 }         
-
+                   
                     $con = Conexion::cerrar();
                     return 1;
                 } catch (\Throwable $th) {
@@ -202,9 +157,9 @@ Class Usuario
     }
 
 
-    public function permisoAsignado ($idusuario){
+    public function menuAsignado ($idusuario){
         $con = Conexion::getConexion();
-        $res = $con->prepare("SELECT * FROM asigna_permiso WHERE id_usuario = $idusuario and id_permiso = '1'" );
+        $res = $con->prepare("SELECT * FROM asigna_menu WHERE id_usuario = $idusuario" );
         $res->execute();
         $rows= $res->fetchAll(PDO::FETCH_OBJ);
         return $rows;

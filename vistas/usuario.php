@@ -1,7 +1,13 @@
 <?php
-    include_once "../inc/head.php";
-    include_once "../inc/header.php";
+ob_start();
+session_start();
 
+if (!$_SESSION['nombre']) {
+    header('LOCATION: ../index.php');
+} else {
+
+    require_once("../inc/head.php");
+    require_once("../inc/header.php");
 ?>
 <div class="content-wrapper">
     <section class="content">
@@ -154,3 +160,7 @@
     include_once "../inc/scritps.php";
 ?>
 <script type="text/javascript" src="scritps/usuario.js"></script>
+
+<?php }
+ob_end_flush();
+?>
