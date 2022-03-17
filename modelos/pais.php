@@ -45,6 +45,12 @@ switch ($_GET['op']) {
     case 'selPro':
         selecProyecto($tabla,$campo,$id);
         break;
+    case 'agente':
+        agentes();
+        break;
+    case 'usuario':
+        usuario();
+        break;
 }
 
 
@@ -217,6 +223,46 @@ function equipos(){
     $selec = '<option value="0" selected>Seleccione una Opcion</option>';
     foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as  $resp) {
         $selec = $selec . '<option value="' . $resp->id_tipo_equipo . '">' . $resp->tamano .' '.$resp->tipo. '</option>';
+    }
+    echo $selec;
+    $con = Conexion::cerrar();
+    $stmt = NULL;
+}
+
+function agentes(){
+    $codigo =0;
+    $tipoe = 'AE';
+    $con = Conexion::getConexion();
+    $stmt = $con->prepare("SELECT * 
+                                FROM empresas 
+                                where codigo >:codigo 
+                                and Tipoe =:tipoe   and id_sucursal = :idsucursal ORDER  BY codigo ASC");
+    $stmt->bindParam(":tipoe",$tipoe);
+    $stmt->bindParam(":codigo",$codigo);
+    $stmt->bindParam(":idsucursal",$_SESSION['idsucursal']);
+
+    $stmt->execute();
+    $selec = '';
+    $selec = '<option value="0" selected>Seleccione una Opcion</option>';
+    foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as  $resp) {
+        $selec = $selec . '<option value="' . $resp->id_tipo_equipo . '">' . $resp->codigo .'-'.$resp->Razons. '</option>';
+    }
+    echo $selec;
+    $con = Conexion::cerrar();
+    $stmt = NULL;
+}
+function usuario(){
+    $tabla ='Login';
+    $estado = true;
+    $con = Conexion::getConexion();
+    $stmt = $con->prepare("SELECT * FROM $tabla where estado =:estado and id_sucursal =:idsucursal ORDER  BY nombre ASC");
+    $stmt->bindParam(":estado",$estado);
+    $stmt->bindParam(":idsucursal",$_SESSION['idsucursal']);
+    $stmt->execute();
+    $selec = '';
+    $selec = '<option value="0" selected>Seleccione una Opcion</option>';
+    foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as  $resp) {
+        $selec = $selec . '<option value="' . $resp->id_tipo_equipo . '">' . $resp->nombre. '</option>';
     }
     echo $selec;
     $con = Conexion::cerrar();

@@ -131,8 +131,8 @@ switch ($_GET["op"]) {
         $data = array();
         foreach ($rspt as $reg) {
             
-            $acciones = "<button type= 'button' class='btn btn-warning btn-sm' onclick='listarUnidad(" . $reg->id_asigna_unidad . ")' ><i class='fa fa-pencil'></i></button>" .
-                " <button type= 'button' class='btn btn-danger btn-sm' onclick='eliminarUnidad(" . $reg->id_asigna_unidad . ")' ><i class='fa fa-close'></i></button>";
+            $acciones = "<button type= 'button' class='btn btn-warning btn-sm' onclick='listarUnidad(" . $reg->id_asigna_unidad . ")' ><i class='fa fa-pencil'></i></button>"; 
+               // " <button type= 'button' class='btn btn-danger btn-sm' onclick='eliminarUnidad(" . $reg->id_asigna_unidad . ")' ><i class='fa fa-close'></i></button>";
             $data[] = array(
                 "0" => $acciones,
                 "1" => $reg->cantidad_unidad,
@@ -179,8 +179,8 @@ switch ($_GET["op"]) {
         $data = array();
         foreach ($rspt as $reg) {
             
-            $acciones = "<button type= 'button' class='btn btn-warning btn-sm' onclick='listaTarifa(" . $reg->idtarifa_target . ")' ><i class='fa fa-pencil'></i></button>" .
-                " <button type= 'button' class='btn btn-danger btn-sm' onclick='eliminarUnidad(" . $reg->idtarifa_target . ")' ><i class='fa fa-close'></i></button>";
+            $acciones = "<button type= 'button' class='btn btn-warning btn-sm' onclick='listaTarifa(" . $reg->idtarifa_target . ")' ><i class='fa fa-pencil'></i></button>"; 
+                //" <button type= 'button' class='btn btn-danger btn-sm' onclick='eliminarUnidad(" . $reg->idtarifa_target . ")' ><i class='fa fa-close'></i></button>";
             $data[] = array(
                 "0" => $acciones,
                 "1" => $reg->unidad,
@@ -218,8 +218,8 @@ switch ($_GET["op"]) {
             $data = array();
             foreach ($rspt as $reg) {
                 
-                $acciones = "<button type= 'button' class='btn btn-warning btn-sm' onclick='listarServicio(" . $reg->id_servicio_target . ")' ><i class='fa fa-pencil'></i></button>" .
-                    " <button type= 'button' class='btn btn-danger btn-sm' onclick='eliminarUnidad(" . $reg->id_servicio_target . ")' ><i class='fa fa-close'></i></button>";
+                $acciones = "<button type= 'button' class='btn btn-warning btn-sm' onclick='listarServicio(" . $reg->id_servicio_target . ")' ><i class='fa fa-pencil'></i></button>"; 
+                    //" <button type= 'button' class='btn btn-danger btn-sm' onclick='eliminarUnidad(" . $reg->id_servicio_target . ")' ><i class='fa fa-close'></i></button>";
                 $data[] = array(
                     "0" => $acciones,
                     "1" => $reg->servicio,

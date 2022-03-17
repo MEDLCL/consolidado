@@ -163,10 +163,7 @@ function limpiar() {
 function llenaAgente() {
     $("#agente").empty();
     $.post(
-        "../modelos/pais.php?op=selecEmpresa&tabla=empresas&campo=Razons", {
-            id: "id_empresa",
-            tipoe: "AE",
-        },
+        "../modelos/pais.php?op=agente", {   },
         function (data, status) {
             $("#agente").html(data);
             $("#agente").selectpicker("refresh");
@@ -175,6 +172,7 @@ function llenaAgente() {
         }
     );
 }
+
 
 function llenaTipoCarga() {
     $("#tipocarga").empty();
@@ -259,9 +257,7 @@ function PaisDestino() {
 function llenaUsuario() {
     $("#usuarioAsignado").empty();
     $.post(
-        "../modelos/pais.php?op=selectN&tabla=login&campo=acceso", {
-            id: "id_usuario",
-            tipoe: "",
+        "../modelos/pais.php?op=usuario", {
         },
         function (data, status) {
             $("#usuarioAsignado").html(data);
@@ -363,7 +359,7 @@ function llenaAGenciaCarga(idagencia) {
 
 function llenaNAVAGE() {
     var valor = $("#tipocarga option:selected").html();
-    if (valor.trim() == "Coloader") {
+    if (valor.trim() == "COLOADER") {
         llenaAGenciaCarga(0);
     } else {
         llenaNaviera(0);
