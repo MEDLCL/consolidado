@@ -46,10 +46,16 @@ switch ($_GET['op']) {
         selecProyecto($tabla,$campo,$id);
         break;
     case 'agente':
-        agentes();
+        agentes($id);
         break;
     case 'usuario':
-        usuario();
+        usuario($id);
+        break;
+    case 'tipoSucursal':
+        sucursal();
+        break;
+    case 'destinoOrigen':
+        destiOrigen($tabla,$idpadre,$campo,$id);
         break;
 }
 
@@ -183,6 +189,7 @@ function selectDependiente($tabla,$idpadre,$campo,$id){
     $con = Conexion::getConexion();
     $stmt = $con->prepare("SELECT * FROM $tabla  WHERE id_pais = :idpais ORDER  BY $campo ASC");
     $stmt->bindParam(":idpais",$idpadre);
+    
     $stmt->execute();
     $selec = '';
     $selec = '<option value="0" selected>Seleccione una Opcion</option>';
@@ -193,6 +200,30 @@ function selectDependiente($tabla,$idpadre,$campo,$id){
     $con = Conexion::cerrar();
     $stmt = NULL;
 }
+
+
+function destiOrigen($tabla,$idpadre,$campo,$id){
+    $con = Conexion::getConexion();
+    $stmt = $con->prepare("SELECT * 
+                                FROM $tabla  
+                            WHERE id_pais = :idpais AND
+                                id_sucursal = :id_sucursal
+                            ORDER  BY $campo ASC");
+
+    $stmt->bindParam(":idpais",$idpadre);
+    $stmt->bindParam(":id_sucursal",$_SESSION['idsucursal']);
+
+    $stmt->execute();
+    $selec = '';
+    $selec = '<option value="0" selected>Seleccione una Opcion</option>';
+    foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as  $resp) {
+        $selec = $selec . '<option value="' . $resp->$id . '">' . $resp->$campo . '</option>';
+    }
+    echo $selec;
+    $con = Conexion::cerrar();
+    $stmt = NULL;
+}
+
 
 function cuentaBancosMov($idpadre){
     $con = Conexion::getConexion();
@@ -229,7 +260,7 @@ function equipos(){
     $stmt = NULL;
 }
 
-function agentes(){
+function agentes($id){
     $codigo =0;
     $tipoe = 'AE';
     $con = Conexion::getConexion();
@@ -245,13 +276,13 @@ function agentes(){
     $selec = '';
     $selec = '<option value="0" selected>Seleccione una Opcion</option>';
     foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as  $resp) {
-        $selec = $selec . '<option value="' . $resp->id_tipo_equipo . '">' . $resp->codigo .'-'.$resp->Razons. '</option>';
+        $selec = $selec . '<option value="' . $resp->$id . '">' . $resp->codigo .'-'.$resp->Razons. '</option>';
     }
     echo $selec;
     $con = Conexion::cerrar();
     $stmt = NULL;
 }
-function usuario(){
+function usuario($id){
     $tabla ='Login';
     $estado = true;
     $con = Conexion::getConexion();
@@ -262,9 +293,14 @@ function usuario(){
     $selec = '';
     $selec = '<option value="0" selected>Seleccione una Opcion</option>';
     foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as  $resp) {
-        $selec = $selec . '<option value="' . $resp->id_tipo_equipo . '">' . $resp->nombre. '</option>';
+        $selec = $selec . '<option value="' . $resp->$id . '">' . $resp->nombre. '</option>';
     }
     echo $selec;
     $con = Conexion::cerrar();
     $stmt = NULL;
+}
+function sucursal(){
+    $json= array();
+    $json['tiposucursal'] = $_SESSION['idsucursal'];
+    echo json_encode($json);
 }

@@ -62,6 +62,7 @@
                                             onclick="activaCliente()" onchange="activaCliente()">
                                         </select>
                                     </div>
+                                    <input type="hidden" name="idtipodocumentose" id= "idtipodocumentose">
                                     <div class="form-group col-md-6">
                                         <label for="noventa" class="col-form-label">No Venta/No RO(*):</label>
                                         <select id="noventa" name="noventa" class="form-control selectpicker"
@@ -96,7 +97,7 @@
                                     </div>
                                     <div class="form-group col-md-12">
                                         <button type="button" class="btn btn-large btn-primary"
-                                            onclick="registraDocumentos()">Registrar</button>
+                                            onclick="verificaMBL()">Registrar</button>
                                     </div>
                                     <div class="panel-body table-responsive col-md-12">
                                         <table class="table table-condensed table-hover table-bordered"
@@ -105,7 +106,6 @@
                                                 <th>Acciones</th>
                                                 <th>Tipo</th>
                                                 <th>Venta/RO</th>
-                                                <th>idv</th>
                                                 <th>Cliente</th>
                                                 <th>No. Documento</th>
                                                 <th>Original</th>
@@ -156,16 +156,14 @@
 
                     <div class="col-md-12"></div>
                     <div class="box-footer col-md-12">
-                        <button type="button" class="btn btn-large btn-primary"
+                        <button type="button" class="btn btn-large btn-primary fa fa-file"
                             onclick="nuevoEmbarqueFueraTabla()">Nuevo</button>
 
-                        <button type="button" class="btn btn-large btn-info" id="btnGrabarCreaM"
+                        <button type="button" class="btn btn-large btn-info fa fa-floppy-o" id="btnGrabarCreaM"
                             onclick="grabarEditarCreaMaritimo()">Grabar
-                            <span class="fa fa-floppy-o"></span>
                         </button>
 
-                        <button type="button" class="btn btn-large btn-danger" onclick="cancelar()">Cancelar
-                            <span class="fa fa-close"></span>
+                        <button type="button" class="btn btn-large btn-danger fa fa-close" onclick="cancelar()">Cancelar
                         </button>
 
                     </div>

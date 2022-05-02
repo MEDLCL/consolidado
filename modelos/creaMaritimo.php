@@ -7,6 +7,29 @@ class creaMaritimo
     public function __construct()
     {
     }
+    public function validaMBL($nodco){
+        $json = array();
+        $con = Conexion::getConexion();
+        try {
+            $rsp = $con->prepare("SELECT * FROM masterbl WHERE NMBL= :NMBL");
+            $rsp->bindParam(":NMBL", $nodco);
+            $rsp->execute();
+            $rsp = $rsp->fetch(PDO::FETCH_OBJ);
+            if ($rsp) {
+                
+                $json['idtipodocumento'] = -1;
+                $json['mensaje'] = "";
+            } else {
+                $json['idtipodocumento'] = -2;
+                $json['mensaje'] = "";
+            }
+        } catch (\Throwable $th) {
+                $json['idtipodocumento'] = -2;
+                $json['mensaje'] = "";
+        }
+        return $json;
+    }
+
     public function grabar($cantClie, $idtipocarga, $idtiposervicio, $idcourier, $idbarco, $idagente, $idnavage, $viaje, $idpaisorigen, $idorigen, $idpaisdestino, $iddestino, $idusuarioA, $observaciones, $fechai, $contenedoresM, $tiposDoc, $ventasM, $clientesM, $orinales, $copias, $obserM, $numeroM, $archivos)
     {
         $fechai = date("Y-m-d", strtotime($fechai));
@@ -24,6 +47,7 @@ class creaMaritimo
         $tipoEmbarque = 'M';
         $idembarque = 0;
         $dirsucursal = '../' . $_SESSION['codigoS'];
+        $tipoIngreso = 'N';
 
         try {
             $con->beginTransaction();
@@ -72,12 +96,12 @@ class creaMaritimo
 
             $codigoEmbarque = $_SESSION["CodigoArea"] . '.' . $codigoA . '.' . $cant . '.' . $anio2 . '.' . $inicialPaisD;
             $tipomedio = 1;
-            $rspt = $con->prepare("INSERT INTO ingresoembarque (id_usuario,id_sucursal,CodigoEmbarque,idTipoMedio,idTipoCarga,idTipoServicio,idTipoDocsR,NoCliente,idUsuarioAsignado,IdUsuarioModifica,fechaModificacion,observaciones,consecutivos)
-                            values(:idusuario,:idsucursal,;CodigoEmbarque,:idTipoMedio,:idtipocarga,:idtiposervicio,:idcourier,NoCliente,:idusuarioasignado,:IdUsuarioModifica,:fechaModificacion,:observaciones,:consecutivos)");
+            $rspt = $con->prepare("INSERT INTO ingresoembarque (id_usuario,id_sucursal,CodigoEmbarque,idTipoMedio,idTipoCarga,idTipoServicio,idTipoDocsR,NoCliente,idUsuarioAsignado,IdUsuarioModifica,fechaModificacion,observaciones,consecutivos,tipo)
+                            values(:idusuario,:idsucursal,;CodigoEmbarque,:idTipoMedio,:idtipocarga,:idtiposervicio,:idcourier,NoCliente,:idusuarioasignado,:IdUsuarioModifica,:fechaModificacion,:observaciones,:consecutivos,:tipo)");
 
             $rspt->bindParam(":idusuario", $_SESSION['idusuario']);
             $rspt->bindParam(":idsucursal", $_SESSION['idsucursal']);
-            $rspt->bindParam(":idsucursal", $codigoEmbarque);
+            $rspt->bindParam(":CodigoEmbarque", $codigoEmbarque);
             $rspt->bindParam(":idTipoMedio", $tipomedio);
             $rspt->bindParam(":idtipocarga", $idtipocarga);
             $rspt->bindParam(":idtiposervicio", $idtiposervicio);
@@ -88,13 +112,14 @@ class creaMaritimo
             $rspt->bindParam(":fechaModificacion", $fechamodi);
             $rspt->bindParam(":observaciones", $observaciones);
             $rspt->bindParam(":consecutivos", $consecutivo);
+            $rspt->bindParam(":tipo", $tipoIngreso);
             $rspt->execute();
 
             if ($rspt) {
                 $idembarque = $con->lastInsertId();
                 
-                $rspt = $con->prepare("INSERT INTO ingresomaritimo (id_usuario,id_sucursal,idBarco,numViaje,idNavOAgC,idAgenteEmbarcador,idOrigen,idDestino,idUsuarioAsignado,idUsuario,idIngresoEmbarque,fechaModificacion)
-                                values(:idusuario,:idsucursal,:idBarco,:numViaje,:idNavOAgC,:idAgenteEmbarcador,:idOrigen,idDestino,:idUsuarioAsignado,:idUsuario,:idIngresoEmbarque,:fechaModificacion)");
+                $rspt = $con->prepare("INSERT INTO ingresomaritimo (id_usuario,id_sucursal,idBarco,numViaje,idNavOAgC,idAgenteEmbarcador,idOrigen,idDestino,idUsuarioAsignado,idUsuario,idIngresoEmbarque,fechaModificacion,idpaisorigen,)
+                                values(:idusuario,:idsucursal,:idBarco,:numViaje,:idNavOAgC,:idAgenteEmbarcador,:idOrigen,idDestino,:idUsuarioAsignado,:idUsuario,:idIngresoEmbarque,:fechaModificacion,:idpaisorigen,:idpaisdestino)");
 
                 $rspt->bindParam(":idusuario", $_SESSION['idusuario']);
                 $rspt->bindParam(":idsucursal", $_SESSION['idsucursal']);
@@ -108,7 +133,9 @@ class creaMaritimo
                 $rspt->bindParam(":idUsuario",  $_SESSION['idusuario']);
                 $rspt->bindParam(":idIngresoEmbarque", $idembarque);
                 $rspt->bindParam(":fechaModificacion", $fechamodi);
-
+                $rspt->bindParam(":idpaisorigen", $idpaisorigen);
+                $rspt->bindParam(":idpaisdestino", $idpaisdestino);
+                
                 $cont = 0;
                 if (count($contenedoresM) > 0) {
                     $rspt = $con->prepare("INSERT INTO contenedor(numero,id_embarque)
@@ -125,20 +152,23 @@ class creaMaritimo
                 // tipos de documento ````
                 if (count($tiposDoc) > 0) {
                     $contdoc = 0;
-                    $rspt = $con->prepare("INSERT INTO documentos_embarque(numero,id_embarque,tipo_embarque,id_venta,cliente,original,copia,observaciones,tipo_documento)
-                    VALUES (:numero,:idembarque,:tipoE,:id_venta,:cliente,:original,:copia,:observaciones,:tipo_documento)");
+
+                    $rspt = $con->prepare("INSERT INTO tipodocumento(idingresoembarque, tipodocto, numero, original, copia, tipoembarque, idventa, observaciones, id_sucursal,:tipo)
+                    VALUES (:idembarque,:tipodocto,:numero,:original,:copia,:tipoembarque,:idventa,:observaciones,:id_sucursal,:tipo)");
 
                     while ($contdoc < count($tiposDoc)) {
-                        $rspt->bindParam(":numero", $numeroM[$contdoc]);
                         $rspt->bindParam(":idembarque", $idembarque);
-                        $rspt->bindParam(":tipoE", $tipoEmbarque);
-                        $rspt->bindParam(":id_venta", $ventasM[$contdoc]);
-                        $rspt->bindParam(":cliente", $clientesM[$contdoc]);
-
-                        $rspt->bindParam(":original", $orinales[$contdoc]);
+                        $rspt->bindParam(":tipodocto", $tiposDoc[$contdoc]);
+                        $rspt->bindParam(":numero", $numeroM[$contdoc]);
+                        $rspt->bindParam(":original",$orinales[$contdoc]);
                         $rspt->bindParam(":copia", $copias[$contdoc]);
+                        $rspt->bindParam(":tipoembarque", $tipoEmbarque);
+                        $rspt->bindParam(":idventa", $ventasM[$contdoc]);
                         $rspt->bindParam(":observaciones", $obserM[$contdoc]);
-                        $rspt->bindParam(":tipo_documento", $tiposDoc[$contdoc]);
+                        $rspt->bindParam(":original", $orinales[$contdoc]);
+                        $rspt->bindParam(":id_sucursal", $_SESSION['idsucursal']);
+                        $rspt->bindParam(":tipo", $tipoIngreso);
+                        
                         $rspt->execute();
                         $contdoc++;
                     }
@@ -289,24 +319,15 @@ class creaMaritimo
         }
     }
 
-    public function editarE($idembarque, $idtipocarga, $idbarco, $viaje, $idnavage, $idusuarioA, $idtiposervicio, $fechai, $codigoEmbarque, $archivos)
+    public function editarE($idembarque,$idingresomaritimo ,$idtipocarga, $idbarco, $viaje, $idnavage, $idusuarioA, $idtiposervicio, $fechai, $codigoEmbarque, $archivos)
     {
 
         $con = Conexion::getConexion();
         try {
             $con->beginTransaction();
-            $rspt = $con->prepare("UPDATE embarque_maritimo SET
-                                    id_tipo_carga=:id_tipo_carga,
-                                    id_barco=:id_barco,
-                                    id_nav_age=:id_nav_age,
-                                    viaje=:viaje,
-                                    id_usuario_asignado=:id_usuario_asignado
-                                    WHERE id_embarque_maritimo = :id_embarque_maritimo");
-            $rspt->bindParam(":id_tipo_carga", $idtipocarga);
-            $rspt->bindParam(":id_barco", $idbarco);
-            $rspt->bindParam(":id_nav_age", $idnavage);
-            $rspt->bindParam(":viaje", $viaje);
-            $rspt->bindParam(":id_usuario_asignado", $idusuarioA);
+            $rspt = $con->prepare("UPDATE 
+                                    WHERE ");
+            
             $rspt->bindParam(":id_embarque_maritimo", $idembarque);
             $rspt->execute();
             $con->commit();
@@ -409,38 +430,7 @@ class creaMaritimo
     {
         $con = Conexion::getConexion();
         try {
-            $rsp = $con->prepare("SELECT  EM.id_embarque_maritimo as idembarque,
-                                        EM.id_tipo_carga,
-                                        EM.id_tipo_servicio,
-                                        EM.id_courier,
-                                        EM.id_barco,
-                                        EM.id_agente,
-                                        EM.id_nav_age,
-                                        EM.id_pais_origen,
-                                        EM.id_origen,
-                                        EM.id_pais_destino,
-                                        EM.id_destino,
-                                        EM.id_usuario_asignado,
-                                        EM.codigo,
-                                        EM.consecutivo,
-                                        EM.viaje,
-                                        EM.observaciones,
-                                        date_format(EM.fecha_ingreso,'%m/%d/%Y') as fechaingreso,
-                                        EM.cant_clientes,
-                                        ifnull(EM.id_barco_llegada,EM.id_barco) as idbarcollegada,
-                                        ifnull(EM.viaje_llegada,EM.viaje) as viajellegada,
-                                        ifnull(date_format(EM.etd_op,'%m/%d/%Y'),'') as etdop,
-                                        ifnull(date_format(EM.eta_op,'%m/%d/%Y'),'') as etaop,
-                                        ifnull(date_format(EM.ceta_op,'%m/%d/%Y'),'') as cetaop,
-                                        ifnull(date_format(EM.eta_naviera_op,'%m/%d/%Y'),'') as etanav,
-                                        ifnull(date_format(EM.completo_op,'%m/%d/%Y'),'') as completo,
-                                        ifnull(date_format(EM.piloto_op,'%m/%d/%Y'),'') as piloto,
-                                        ifnull(date_format(EM.descarga_op,'%m/%d/%Y'),'') as descarga,
-                                        ifnull(date_format(EM.liberado_op,'%m/%d/%Y'),'') as liberado,
-                                        ifnull(date_format(EM.devuelto_op,'%m/%d/%Y'),'') as devuelto
-
-                                    FROM embarque_maritimo as EM
-                                        WHERE  id_embarque_maritimo = :idembarque");
+            $rsp = $con->prepare("call prcBuscaEmbarqueMaritimo(:idembarque);");
             $rsp->bindParam(":idembarque", $idembarque);
             $rsp->execute();
             $rsp = $rsp->fetch(PDO::FETCH_OBJ);
@@ -464,7 +454,8 @@ class creaMaritimo
         }
     }
 
-    public function listarCNTR($idembarque)
+// area de contenedores
+    public function listarCNTR($idembarque,$tipoIngreso)
     {
         $con = Conexion::getConexion();
         try {
@@ -481,26 +472,118 @@ class creaMaritimo
             return 0;
         }
     }
+// area de documentos 
+    public function grabarDocumento($idembarque,$idembarquemaritimo,$tipoDoc,$idventa,$cliente,$original,$copia,$obserDoc,$nodco,$tipoIngreso){
+        $con = Conexion::getConexion();
+        $tipo = 'M';
+        $correlativo =0;
+        $idemb =0;
+        
+        if ($tipoIngreso== 'A'){
+            $idemb = $idembarquemaritimo;
+        }else{
+            $idemb = $idembarque;
+        }
 
-    public  function listarDocumentos($idembarque)
+        try {
+            $con->beginTransaction();
+            $stmt = $con->prepare("INSERT INTO tipodocumento(idingresoembarque,tipodocto,numero,original,copia,tipoembarque,correlativo,idventa,observaciones,cliente,tipo,id_sucursal)
+            VALUES (:idingresoembarque,:tipodocto,:numero,:original,:copia,:tipoembarque,:correlativo,:idventa,:observaciones,:cliente,:tipo,:id_sucursal)");
+            $stmt->bindParam(":idingresoembarque", $idemb);
+            $stmt->bindParam(":tipodocto", $tipoDoc);
+            $stmt->bindParam(":numero", $nodco);
+            $stmt->bindParam(":original", $original);
+            $stmt->bindParam(":copia", $copia);
+            $stmt->bindParam(":tipoembarque", $tipo);
+            $stmt->bindParam(":correlativo", $correlativo);
+            $stmt->bindParam(":idventa", $idventa);
+            $stmt->bindParam(":observaciones", $obserDoc);
+            $stmt->bindParam(":cliente", $cliente);
+            $stmt->bindParam(":tipo", $tipoIngreso);
+            $stmt->bindParam(":id_sucursal", $_SESSION['idsucursal']);
+            $stmt->execute();
+
+            if ($stmt) {
+                $json = array();
+                $json['idtipodocumento'] = $con->lastInsertId();
+                $json['mensaje'] = "Operacion Insertada con Exito";
+            }
+            $con->commit();
+            return $json;
+        } catch (\Throwable $th) {
+            $json = array();
+            $json['idtipodocumento'] = 0;
+            $json['mensaje'] = "Error al insertar el Documento " . $th->getMessage();
+            return $json;
+        }
+    }
+
+    public function editarDocumento(){
+        $con = Conexion::getConexion();
+        try {
+            $rsp = $con->prepare("UPDATE asigna_unidad_proyecto 
+                                    SET 
+                                        id_tipo_unidad=:tipounidad,
+                                        id_tipo_equipo=:tipoequipo,
+                                        cantidad_unidad= :cantunidad,
+                                        temperatura=:temperatura,
+                                        especificacion=:especificacion,
+                                        id_seguridad=:seguridad,
+                                        id_marchamo=:marchamo,
+                                        id_gps=:gps,
+                                        lugar_carga=:lugarcarga,
+                                        lugar_descarga=:lugardescarga,
+                                        id_canal_distribucion=:canaldistribucion
+                    WHERE id_asigna_unidad=:idasignaunidad");
+
+            $rsp->bindParam(":tipounidad", $tipoUnida);
+            $rsp->bindParam(":tipoequipo", $tipoEquipo);
+            $rsp->bindParam(":cantunidad", $cantUnidad);
+            $rsp->bindParam(":temperatura", $temperatura);
+            $rsp->bindParam(":especificacion", $caracEquipo);
+            $rsp->bindParam(":seguridad", $seguridad);
+            $rsp->bindParam(":marchamo", $marchamo);
+            $rsp->bindParam(":gps", $gps);
+            $rsp->bindParam(":lugarcarga", $lugarCargaPro);
+            $rsp->bindParam(":lugardescarga", $lugarDescargaPro);
+            $rsp->bindParam(":canaldistribucion", $canalDistribucionPro);
+            $rsp->bindParam(":idasignaunidad", $idtipounidadtransporte);
+
+            $rsp->execute();
+            if ($rsp !== false) {
+                $json = array();
+                $json['idunidadasingada'] = $idtipounidadtransporte;
+                $json['mensaje'] = "Unidad Actualizado con exito";
+                return $json;
+            } else {
+                $json = array();
+                $json['idunidadasingada'] = 0;
+                $json['mensaje'] = "Error al actualizar Unidad ";
+                return $json;
+            }
+        } catch (\Throwable $th) {
+            $json = array();
+            $json['idcuenta'] = 0;
+            $json['mensaje'] = "Error al actualizar Unidad " . $th->getMessage();
+            return $json;
+            //return $th->getMessage();
+        }
+    }
+
+    public  function listarDocumentos($idembarque,$tipoIngreso,$idembarquemaritimo)
     {
+        if ($tipoIngreso== 'A'){
+            $idemb = $idembarquemaritimo;
+        }else{
+            $idemb = $idembarque;
+        }
+        $tipoe = 'M';
         try {
             $con = Conexion::getConexion();
-            $rspt = $con->prepare("SELECT D.id_documentos,
-                                        D.id_embarque,
-                                        D.tipo_embarque,
-                                        D.id_venta,
-                                        D.cliente,
-                                        D.numero,
-                                        D.original,
-                                        D.copia,
-                                        D.observaciones,
-                                        V.numero  as noventa,
-                                        D.tipo_documento
-                                    FROM documentos_embarque as D left join 
-                                        venta_ro  as V on V.id_venta = D.id_venta 
-                                        where id_embarque = :idembarque");
-            $rspt->bindParam(":idembarque", $idembarque);
+            $rspt = $con->prepare("call prclistadoDocEmbarque(:idembarque, :tipoe,:tipoI);");
+            $rspt->bindParam(":idembarque", $idemb);
+            $rspt->bindParam(":tipoe", $tipoe);
+            $rspt->bindParam(":tipoI", $tipoIngreso);
             $rspt->execute();
             $rspt = $rspt->fetchAll(PDO::FETCH_OBJ);
             if ($rspt) {
@@ -512,6 +595,8 @@ class creaMaritimo
             return 0;
         }
     }
+
+
     public function eliminaDcoumento($iddocumento)
     {
         try {

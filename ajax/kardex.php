@@ -5,10 +5,10 @@ require_once "../modelos/kardex.php";
 $kardex = new kardex();
 
 
-$idalmacen = isset($_POST["idAlmacen"]) ? $idsucursal = $_POST["idAlmacen"] : $idsucursal = 0;
-$idconsignado = isset($_POST['consignado']) ? limpia($_POST['consignado']) : $idconsignado = '';
-$contenedor = isset($_POST['contenedor']) ? limpia($_POST['contenedor']) : $contenedor = '';
-$poliza = isset($_POST['poliza']) ? limpia($_POST['poliza']) : $poliza = '';
+$idalmacen = isset($_POST["idAlmacen"]) ? $idsucursal = $_POST["idAlmacen"] : $idalmacen = 0;
+$idconsignado = isset($_POST['consignadoKardex']) ? limpia($_POST['consignadoKardex']) : $idconsignado = '';
+$contenedor = isset($_POST['contenedorKadex']) ? limpia($_POST['contenedorKadex']) : $contenedor = '';
+$poliza = isset($_POST['polizaKardex']) ? limpia($_POST['polizaKardex']) : $poliza = '';
 $referencia = isset($_POST['referencia']) ? $_POST['referencia'] : $referencia = 0;
 $pesoT = isset($_POST['pesoT']) ? limpia($_POST['pesoT']) : $pesoT = '';
 $volumenT = isset($_POST['volumenT']) ? limpia($_POST['volumenT']) : $volumenT = '';
@@ -16,14 +16,15 @@ $bultosT = isset($_POST['bultosT']) ? limpia($_POST['bultosT']) : $bultosT = '';
 $codigoA = isset($_POST['codigoAlmacen']) ? limpia($_POST['codigoAlmacen']) : $codigoA = '';
 $fechaI = isset($_POST['fechaI']) ? limpia($_POST['fechaI']) : $fechaI = '';
 $cant_clientes = isset($_POST["cntClientes"]) ? limpia($_POST["cntClientes"]) : $cant_clientes = "";
+$viaje = isset($_POST["ViajeKardex"]) ? limpia($_POST["ViajeKardex"]) : $viaje = "";
 
 switch ($_GET["op"]) {
     case 'guardaryeditar':
         if ($idalmacen == 0 || $idalmacen == "") {
-            $resp = $kardex->grabar($codigoA, $idconsignado, $contenedor, $poliza, $referencia, $pesoT, $volumenT, $bultosT, $fechaI, $cant_clientes);
-            echo $resp;
+            $resp = $kardex->grabar($idconsignado, $contenedor, $poliza, $referencia, $pesoT, $volumenT, $bultosT, $fechaI, $cant_clientes,$viaje);
+            echo json_encode($resp);
         } else {
-            $resp = $kardex->editarAlmacen($idalmacen, $idconsignado, $contenedor, $poliza, $referencia, $pesoT, $volumenT, $bultosT, $fechaI, $cant_clientes);
+            $resp = $kardex->editarAlmacen($idalmacen, $idconsignado, $contenedor, $poliza, $referencia, $pesoT, $volumenT, $bultosT, $fechaI, $cant_clientes,$viaje);
             echo $resp;
         }
         break;

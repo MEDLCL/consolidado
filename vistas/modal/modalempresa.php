@@ -178,7 +178,7 @@
                                                             <label for="representanteLegal"
                                                                 class="control-label">Representante Legal:</label>
                                                             <input type="text" name="representanteLegal"
-                                                                id="representanteLegal" class="form-control input-sm">
+                                                                id="representanteLegal" class="form-control input-sm" onkeyup="mayusculas(this)">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="diasCreditoTR" class="control-label">Dias
@@ -199,7 +199,7 @@
                                                                 Cheque:</label>
 
                                                             <textarea name="" id="paraCheque" class="form-control"
-                                                                rows="2"></textarea>
+                                                                rows="2" onkeyup="mayusculas(this)"></textarea>
 
                                                         </div>
                                                         <div class="form-group">
@@ -231,12 +231,12 @@
                                                     <div class="form-group">
                                                         <label for="Nombre" class="control-label">Nombre:</label>
                                                         <input type="text" name="Nombre" id="Nombre"
-                                                            class="form-control input-sm">
+                                                            class="form-control input-sm" onkeyup="mayusculas(this)">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="Apellido" class="control-label">Apellido:</label>
                                                         <input type="text" name="Apellido" id="Apellido"
-                                                            class="form-control input-sm">
+                                                            class="form-control input-sm" onkeyup="mayusculas(this)">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="Correo" class="control-label">Correo:</label>
@@ -252,7 +252,7 @@
                                                     <div class="form-group">
                                                         <label for="puesto" class="control-label">Puesto:</label>
                                                         <input type="text" name="puesto" id="puesto"
-                                                            class="form-control input-sm">
+                                                            class="form-control input-sm" onkeyup="mayusculas(this)">
                                                     </div>
                                                     <div class="form-group col-md-offset-3">
                                                         <button type="button" class="btn btn-large btn-success"

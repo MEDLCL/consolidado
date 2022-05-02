@@ -16,6 +16,10 @@
                             <input type="text" name="codigoMaritimo" id="codigoMaritimo" class="form-control input-sm"
                                 readonly>
                             <input type="hidden" name="idembarquemaritimo" id="idembarquemaritimo">
+                            <input type="hidden" name="idingresomaritimo" id="idingresomaritimo">
+                            <input type="hidden" name="tipo" id="tipo">
+                            <input type="hidden" name="idembarque" id="idembarque">
+
                         </div>
                         <div class="form-group col-md-4">
                             <label for="consecutivo" class="control-label">Consecutivo:</label>

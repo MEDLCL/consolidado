@@ -27,20 +27,54 @@ function init() {
     limpiarDetallePlantilla();
     $("#plantillaCalculoAlmacen").hide();
     $("#calculoAlmacen").hide();
+    llenatipoPoliza();
+    ocultacr();
+}
+function llenatipoPoliza(){
+    $("#tipoPolizaKardex").empty();
+    $.post(
+        "../modelos/pais.php?op=General&tabla=tipo_poliza&campo=nombre", {
+            id: "id_tipo_poliza",
+            tipoe: "",
+        },
+        function (data, status) {
+            $("#tipoPolizaKardex").html(data);
+            $("#tipoPolizaKardex").selectpicker("refresh");
+            $("#tipoPolizaKardex").val(0);
+            $("#tipoPolizaKardex").selectpicker("refresh");
+        }
+    );
+}
+function ocultacr(){
+    $.post(
+        "../modelos/pais.php?op=tipoSucursal", { },
+        function (data, status) {
+            data = JSON.parse(data);
+            if (data.tiposucursal==4){
+                $(".almacr").show();
+                $(".almadisanic").hide();
+
+                $("#tipoPolizaKardex").val(1);
+                $("#tipoPolizaKardex").selectpicker("refresh");
+            }else{
+                $(".almacr").hide();
+            }
+        }
+    );
 }
 
 function llenaconsignado() {
-    $("#consignado").empty();
+    $("#consignadoKardex").empty();
     $.post(
         "../modelos/pais.php?op=selecEmpresa&tabla=empresas&campo=Razons", {
             id: "id_empresa",
             tipoe: "CO",
         },
         function (data, status) {
-            $("#consignado").html(data);
-            $("#consignado").selectpicker("refresh");
-            $("#consignado").val(0);
-            $("#consignado").selectpicker("refresh");
+            $("#consignadoKardex").html(data);
+            $("#consignadoKardex").selectpicker("refresh");
+            $("#consignadoKardex").val(0);
+            $("#consignadoKardex").selectpicker("refresh");
         }
     );
 }
@@ -210,20 +244,22 @@ function limpiaEmpaque() {
 }
 
 function grabarAlmacen() {
-    var consignado = $("#consignado").prop("selectedIndex");
-    var contenedor = $("#contenedor").val();
-    var poliza = $("#poliza").val();
+    var consignado = $("#consignadoKardex").prop("selectedIndex");
+    var contenedor = $("#contenedorKadex").val();
+    var poliza = $("#polizaKardex").val();
     var referencia = $("#referencia").val();
     var pesoT = $("#pesoT").val();
     var volumenT = $("#volumenT").val();
     var bultosT = $("#bultosT").val();
     var fechaI = $("#fechaI").val();
     var cntClientes = $("#cntClientes").val();
+    var placa = $("#placaKardex").val();
+
     if (consignado == -1 || consignado == 0) {
         alertify.alert("Campo Vacio", "Debe de Seleccionar consignado");
         return false;
     } else if (contenedor.trim() == "") {
-        alertify.alert("Campo Vacio", "Debe de ingresar Contenedor/Placa");
+        alertify.alert("Campo Vacio", "Debe de ingresar Contenedor");
         return false;
     } else if (poliza.trim() == "") {
         alertify.alert("Campo Vacio", "Debe de ingresar Poliza");
@@ -248,33 +284,24 @@ function grabarAlmacen() {
         return false;
     }
     var formAlmacen = new FormData($("#formAlmacen")[0]);
-    $.post("../ajax/kardex.php?op=codigo", {}, function (data, status) {
-        if (status == "success") {
-            $("#codigoAlmacen").val(data);
-            formAlmacen = new FormData($("#formAlmacen")[0]);
-            $.ajax({
-                url: "../ajax/kardex.php?op=guardaryeditar",
-                type: "POST",
-                data: formAlmacen,
-                contentType: false,
-                processData: false,
-                success: function (datos) {
-                    if (datos > 0) {
-                        //limpiar();
-                        // $('#listadosucursal').DataTable().ajax.reload();
-                        $("#Tkardex").DataTable().ajax.reload();
-                        $("#idAlmacenD").val(datos);
-                        alertify.success("Proceso Realizado con exito");
-                        $("#btnNuevoDetalle").removeAttr("disabled");
-                        $("#grabaAlmacen").attr("disabled", "false");
-                    } else {
-                        alertify.error("Proceso no se pudo realizar") + " " + datos;
-                    }
-                },
-            });
-        } else {
-            alertify.alert("Error al Genera el Codigo");
-        }
+    $.ajax({
+        url: "../ajax/kardex.php?op=guardaryeditar",
+        type: "POST",
+        data: formAlmacen,
+        contentType: false,
+        processData: false,
+        success: function (datos) {
+            datos = JSON.parse(datos);
+            if (datos.idkardex > 0) {
+                $("#Tkardex").DataTable().ajax.reload();
+                $("#idAlmacenD").val(datos.idkardex);
+                alertify.success("Proceso Realizado con exito");
+                $("#btnNuevoDetalle").prop("disabled",false);
+                $("#grabaAlmacen").prop("disabled", true);
+            } else {
+                alertify.error("Proceso no se pudo realizar") + " " + datos;
+            }
+        },
     });
 }
 
@@ -314,9 +341,9 @@ function ListarAlmacen(idAlmacen) {
                 $("#idAlmacen").val(data.id_almacen);
                 $("#idAlmacenD").val(data.id_almacen);
                 $("#codigoAlmacen").val(data.codigo);
-                $("#consignado").val(data.id_consignado);
-                $("#consignado").selectpicker("refresh");
-                $("#contenedor").val(data.contenedor_placa);
+                $("#consignadoKardex").val(data.id_consignado);
+                $("#consignadoKardex").selectpicker("refresh");
+                $("#consignadoKardex").val(data.contenedor_placa);
                 $("#poliza").val(data.poliza);
                 $("#referencia").val(data.referencia);
                 $("#pesoT").val(data.peso);
